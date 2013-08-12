@@ -12,7 +12,6 @@ THREEx.HtmlMixer	= function(frontRenderer, scene, camera){
 	//////////////////////////////////////////////////////////////////////////////////
 	//		comment								//
 	//////////////////////////////////////////////////////////////////////////////////
-	
 
 	var rendererCSS	= new THREE.CSS3DRenderer()
 	// TODO to make generic
@@ -57,10 +56,6 @@ THREEx.HtmlMixer	= function(frontRenderer, scene, camera){
 
 THREEx.HtmlMixer.Plane = function(htmlmixer, domElement, opts) {	
 	opts		= opts	|| {}
-	// opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 1024
-	// opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 360
-	// opts.planeH	= opts.planeH !== undefined	? opts.planeH	: 240
-
 	opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 1024
 	opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 1
 	opts.planeH	= opts.planeH !== undefined	? opts.planeH	: 3/4
@@ -109,6 +104,10 @@ THREEx.HtmlMixer.Plane = function(htmlmixer, domElement, opts) {
 		console.error('not yet implemented')
 	})
 };
+
+//////////////////////////////////////////////////////////////////////////////////
+//		Some Helpers							//
+//////////////////////////////////////////////////////////////////////////////////
 
 
 /**
