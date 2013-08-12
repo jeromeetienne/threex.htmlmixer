@@ -1,6 +1,6 @@
 var THREEx = THREEx || {}
 
-THREEx.Htmlmixer	= function(frontRenderer, scene, camera){
+THREEx.HtmlMixer	= function(frontRenderer, scene, camera){
 	// update functions
 	var updateFcts	= []
 	this.update	= function(delta, now){
@@ -55,7 +55,7 @@ THREEx.Htmlmixer	= function(frontRenderer, scene, camera){
 	})
 }
 
-THREEx.Htmlmixer.Plane = function(htmlmixer, domElement, opts) {	
+THREEx.HtmlMixer.Plane = function(htmlmixer, domElement, opts) {	
 	opts		= opts	|| {}
 	// opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 1024
 	// opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 360
@@ -115,31 +115,31 @@ THREEx.Htmlmixer.Plane = function(htmlmixer, domElement, opts) {
  * create a THREEx.HtmlmixedPlane for an iframe
  * 
  * @param  {String} url  the url for the iframe
- * @param  {Object} opts the options for THREEx.HtmlmixerPlane constructor
- * @return {THREEx.HtmlmixerPlane}      the object just created
+ * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
+ * @return {THREEx.HtmlMixerPlane}      the object just created
  */
-THREEx.Htmlmixer.createPlaneFromIframe	= function(htmlmixer, url, opts){
+THREEx.HtmlMixer.createPlaneFromIframe	= function(htmlmixer, url, opts){
 	// create the iframe element
 	var domElement	= document.createElement('iframe')
 	domElement.src	= url
 	domElement.style.border	= 'none'
-	// create the THREEx.HtmlmixerPlane for that
-	return new THREEx.Htmlmixer.Plane(htmlmixer, domElement, opts)
+	// create the THREEx.HtmlMixerPlane for that
+	return new THREEx.HtmlMixer.Plane(htmlmixer, domElement, opts)
 }
 
 /**
  * create a THREEx.HtmlmixedPlane for an iframe
  * 
  * @param  {String} url  the url for the iframe
- * @param  {Object} opts the options for THREEx.HtmlmixerPlane constructor
- * @return {THREEx.HtmlmixerPlane}      the object just created
+ * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
+ * @return {THREEx.HtmlMixerPlane}      the object just created
  */
-THREEx.Htmlmixer.createPlaneFromImage	= function(htmlmixer, url, opts){
+THREEx.HtmlMixer.createPlaneFromImage	= function(htmlmixer, url, opts){
 	// create the iframe element
 	var domElement	= document.createElement('img')
 	domElement.src	= url
-	// create the THREEx.HtmlmixerPlane for that
-	return new THREEx.Htmlmixer.Plane(htmlmixer, domElement, opts)
+	// create the THREEx.HtmlMixerPlane for that
+	return new THREEx.HtmlMixer.Plane(htmlmixer, domElement, opts)
 }
 
 

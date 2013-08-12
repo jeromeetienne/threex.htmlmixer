@@ -13,17 +13,17 @@
 	camera.position.z = 3;
 
 	//////////////////////////////////////////////////////////////////////////////////
-	//		create THREEx.Htmlmixer						//
+	//		create THREEx.HtmlMixer						//
 	//////////////////////////////////////////////////////////////////////////////////
 
-	var htmlmixer	= new THREEx.Htmlmixer(renderer, scene, camera)
+	var htmlMixer	= new THREEx.HtmlMixer(renderer, scene, camera)
 	updateFcts.push(function(delta, now){
-		htmlmixer.update(delta, now)
+		htmlMixer.update(delta, now)
 	})
 	
 
 	//////////////////////////////////////////////////////////////////////////////////
-	//		create a Plane for THREEx.Htmlmixer				//
+	//		create a Plane for THREEx.HtmlMixer				//
 	//////////////////////////////////////////////////////////////////////////////////
 	
 
@@ -32,7 +32,7 @@
 	domElement.src	= 'http://threejs.org';
 	domElement.style.border	= 'none'
 	// create the plane
-	var mixerPlane	= new THREEx.Htmlmixer.Plane(htmlmixer, domElement)
+	var mixerPlane	= new THREEx.HtmlMixer.Plane(htmlMixer, domElement)
 	scene.add(mixerPlane.object3d)
 	
 	//////////////////////////////////////////////////////////////////////////////////
