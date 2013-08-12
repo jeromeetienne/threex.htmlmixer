@@ -16,14 +16,14 @@
 	var geometry	= new THREE.TorusKnotGeometry(1-0.25, 0.25);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.set(-2,0,-1)
+	mesh.position.set(-1,0,-0.5)
 	// mesh.scale.multiplyScalar(12)
 	scene.add( mesh );
 	
 	var geometry	= new THREE.TorusKnotGeometry(1-0.25, 0.25);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.set(2,0,1)
+	mesh.position.set(+1,0,+0.5)
 	// mesh.scale.multiplyScalar(12)
 	scene.add( mesh );
 
@@ -49,7 +49,7 @@
 	domElement.style.border	= 'none'
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(htmlMixer, domElement)
-	mixerPlane.object3d.scale.multiplyScalar(4)
+	mixerPlane.object3d.scale.multiplyScalar(2)
 	scene.add(mixerPlane.object3d)
 	
 	//////////////////////////////////////////////////////////////////////////////////
