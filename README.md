@@ -24,7 +24,7 @@ or with
 you type the following to install the package.
 
 ```bash
-bower install -s threex.htmlmixer=https://github.com/jeromeetienne/threex.htmlmixer/archive/master.zip
+bower install threex.htmlmixer
 ```
 
 then you add that in your html

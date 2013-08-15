@@ -1,6 +1,13 @@
 var THREEx = THREEx || {}
 
-THREEx.HtmlMixer	= function(frontRenderer, scene, camera){
+/**
+ * define a context for THREEx.HtmlMixer
+ * 
+ * @param  {THREE.WebGLRenderer|THREE.CanvasRenderer} frontRenderer the renderer in front
+ * @param  {THREE.Scene} scene the original scene
+ * @param  {THREE.Camera} camera the camera used for the last view
+ */
+THREEx.HtmlMixer.Context	= function(frontRenderer, scene, camera){
 	// update functions
 	var updateFcts	= []
 	this.update	= function(delta, now){
@@ -54,7 +61,14 @@ THREEx.HtmlMixer	= function(frontRenderer, scene, camera){
 	})
 }
 
-THREEx.HtmlMixer.Plane = function(htmlmixer, domElement, opts) {	
+/**
+ * define plane in THREEx.HtmlMixer
+ * 
+ * @param  {THREEx.HtmlMixer.Context} mixerContext context
+ * @param  {HTMLElement} domElement   the dom element to mix
+ * @param  {Object} opts         options to set
+ */
+THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {	
 	opts		= opts	|| {}
 	opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 1024
 	opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 1
@@ -86,19 +100,19 @@ THREEx.HtmlMixer.Plane = function(htmlmixer, domElement, opts) {
 	cssObject.quaternion	= object3d.quaternion
 
 	cssObject.scale.set(1,1,1)
-		.multiplyScalar(htmlmixer.cssFactor/(elementWidth/planeW))
+		.multiplyScalar(mixerContext.cssFactor/(elementWidth/planeW))
 
 	object3d.addEventListener('added', function(event){
 		updateFcts.push(function(delta, now){
 			// TODO compute world position and use it
 			cssObject.position
 				.copy(object3d.position)
-				.multiplyScalar(htmlmixer.cssFactor)
+				.multiplyScalar(mixerContext.cssFactor)
 
 			var scale	= elementWidth/(geometry.width*object3d.scale.x)
-			cssObject.scale.set(1,1,1).multiplyScalar(htmlmixer.cssFactor/scale)
+			cssObject.scale.set(1,1,1).multiplyScalar(mixerContext.cssFactor/scale)
 		})
-		htmlmixer.cssScene.add(cssObject)
+		mixerContext.cssScene.add(cssObject)
 	})
 	object3d.addEventListener('removed', function(event){
 		console.error('not yet implemented')
@@ -117,13 +131,13 @@ THREEx.HtmlMixer.Plane = function(htmlmixer, domElement, opts) {
  * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
  * @return {THREEx.HtmlMixerPlane}      the object just created
  */
-THREEx.HtmlMixer.createPlaneFromIframe	= function(htmlmixer, url, opts){
+THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
 	// create the iframe element
 	var domElement	= document.createElement('iframe')
 	domElement.src	= url
 	domElement.style.border	= 'none'
 	// create the THREEx.HtmlMixerPlane for that
-	return new THREEx.HtmlMixer.Plane(htmlmixer, domElement, opts)
+	return new THREEx.HtmlMixer.Plane(mixerContext, domElement, opts)
 }
 
 /**
@@ -133,12 +147,12 @@ THREEx.HtmlMixer.createPlaneFromIframe	= function(htmlmixer, url, opts){
  * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
  * @return {THREEx.HtmlMixerPlane}      the object just created
  */
-THREEx.HtmlMixer.createPlaneFromImage	= function(htmlmixer, url, opts){
+THREEx.HtmlMixer.createPlaneFromImage	= function(mixerContext, url, opts){
 	// create the iframe element
 	var domElement	= document.createElement('img')
 	domElement.src	= url
 	// create the THREEx.HtmlMixerPlane for that
-	return new THREEx.HtmlMixer.Plane(htmlmixer, domElement, opts)
+	return new THREEx.HtmlMixer.Plane(mixerContext, domElement, opts)
 }
 
 
