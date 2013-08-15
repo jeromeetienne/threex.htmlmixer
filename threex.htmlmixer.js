@@ -1,5 +1,8 @@
 var THREEx = THREEx || {}
 
+
+THREEx.HtmlMixer	= {}
+
 /**
  * define a context for THREEx.HtmlMixer
  * 

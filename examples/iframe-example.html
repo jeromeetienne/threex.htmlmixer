@@ -25,15 +25,15 @@
 	// 	// mesh.rotation.y += 2 * delta;		
 	// })
 
-	var htmlMixer	= new THREEx.HtmlMixer(renderer, scene, camera)
+	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
 	updateFcts.push(function(delta, now){
-		htmlMixer.update(delta, now)
+		mixerContext.update(delta, now)
 	})
 	
 ;(function(){	
 	var url		= '../../../../index.html';
 	var url		= 'http://learningthreejs.com';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 	scene.add(mixerPlane.object3d)
 	updateFcts.push(function(delta, now){
 		mixerPlane.object3d.rotation.y += Math.PI * 2 * delta * 0.1;
@@ -44,7 +44,7 @@
 ;(function(){	
 return;
 	var url		= 'http://player.vimeo.com/video/14641555?portrait=0&color=333';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 	var object3d	= mixerPlane.object3d
 	scene.add(object3d)
 	object3d.position.x = 1;
@@ -53,7 +53,7 @@ return;
 ;(function(){	
 return
 	var url		= 'http:////www.youtube.com/embed/1Dfj0xuGuhM?webm=1&html5=1';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 	var object3d	= mixerPlane.object3d
 	scene.add(object3d)
 	object3d.position.x = -1;
@@ -62,7 +62,7 @@ return
 ;(function(){	
 return
 	var url		= 'http://i.imgur.com/RJQc7Qy.gif';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromImage(htmlMixer, url)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromImage(mixerContext, url)
 	var object3d	= mixerPlane.object3d
 	scene.add(object3d)
 	object3d.position.x = -1;
@@ -72,9 +72,9 @@ return
 return;
 	var content	= '<a href="http://imgur.com/RJQc7Qy"><img width="100%" src="http://i.imgur.com/RJQc7Qy.gif" title="Hosted by imgur.com" /></a>';
 	var url		= "data:text/html;base64,"+window.btoa(content);
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
-	var mixerPlane	= new THREEx.HtmlMixer.Plane(htmlMixer, domElement)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
+	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	var object3d	= mixerPlane.object3d
 	scene.add(object3d)
 	object3d.position.x = -1;
@@ -83,7 +83,7 @@ return;
 ;(function(){	
 return
 	var url		= 'http://threejs.org/';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 	var object3d	= mixerPlane.object3d
 	scene.add(object3d)
 	object3d.position.x = 1;
@@ -92,7 +92,7 @@ return
 ;(function(){
 // return;
 	var url		= 'http://githubbadge.appspot.com/badge/jeromeetienne';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url, {
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {
 		elementW	: 200
 	})
 	var object3d	= mixerPlane.object3d
@@ -104,8 +104,8 @@ return
 
 ;(function(){	
 return
-	var url		= 'http://127.0.0.1:8000/src/threex.htmlMixer/examples/twitteriframe.html';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url, {
+	var url		= 'http://127.0.0.1:8000/src/threex.mixerContext/examples/twitteriframe.html';
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {
 		elementW	: 512
 	})
 	var object3d	= mixerPlane.object3d
@@ -116,7 +116,7 @@ return
 ;(function(){	
 return
 	var url		= 'http://www.dailymotion.com/embed/video/x12pd0r_betisier-ce-qui-se-passe-entre-les-prises_fun?html=1';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url, {
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {
 		elementW	: 512
 	})
 	var object3d	= mixerPlane.object3d
@@ -127,7 +127,7 @@ return
 ;(function(){	
 return
 	var url		= 'http://embed.ted.com/talks/derek_paravicini_and_adam_ockelford_in_the_key_of_genius.html';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url, {
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {
 		elementW	: 512
 	})
 	var object3d	= mixerPlane.object3d
@@ -138,7 +138,7 @@ return
 ;(function(){	
 return
 	var url		= 'http://blip.tv/play/AYOT%2BBUC.x?p=1';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url, {
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {
 		elementW	: 512
 	})
 	var object3d	= mixerPlane.object3d
@@ -149,7 +149,7 @@ return
 ;(function(){	
 // return
 	var url		= 'http://instagram.com/p/b7dRvqnUxT/embed/';
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url, {
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {
 		elementW	: 512
 	})
 	var object3d	= mixerPlane.object3d
@@ -166,7 +166,7 @@ return
 		'</body></html>',
 	].join('\n');
 	var url		= "data:text/html;base64,"+window.btoa(content);
-	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 	var object3d	= mixerPlane.object3d
 	scene.add(object3d)
 	object3d.position.x = -1;

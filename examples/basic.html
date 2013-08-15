@@ -18,9 +18,9 @@
 	//		create THREEx.HtmlMixer						//
 	//////////////////////////////////////////////////////////////////////////////////
 
-	var htmlMixer	= new THREEx.HtmlMixer(renderer, scene, camera)
+	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
 	updateFcts.push(function(delta, now){
-		htmlMixer.update(delta, now)
+		mixerContext.update(delta, now)
 	})
 	
 
@@ -34,7 +34,7 @@
 	domElement.src	= 'http://jeromeetienne.github.io/threex/';
 	domElement.style.border	= 'none'
 	// create the plane
-	var mixerPlane	= new THREEx.HtmlMixer.Plane(htmlMixer, domElement)
+	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	mixerPlane.object3d.scale.multiplyScalar(2)
 	scene.add(mixerPlane.object3d)
 	
