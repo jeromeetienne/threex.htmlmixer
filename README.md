@@ -41,23 +41,23 @@ instanciate the first object
 
 ```javascript
 // you create the new object
-var htmlMixer	= new THREEx.HtmlMixer(renderer, scene, camera)
+var mixerContext	= new THREEx.HtmlMixer.Context(renderer, scene, camera)
 // you update it at every frame
 updateFcts.push(function(delta, now){
-	htmlMixer.update(delta, now)
+	mixerContext.update(delta, now)
 })
 ```
 
 update it at every frame
 
 ```javascript
-htmlMixer.update(delta, now)
+mixerContext.update(delta, now)
 ```
 
 create an plane
 
 ```javascript
-var mixerPlane	= new THREEx.HtmlMixer.Plane(htmlMixer, domElement)
+var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 scene.add(mixerPlane.object3d)
 ```
 
@@ -66,6 +66,6 @@ There is a shortcut for iframe as it is a common use-case.
 
 ```javascript
 var url		= 'http://threejs.com';
-var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(htmlMixer, url)
+var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 scene.add(mixerPlane.object3d)
 ```
