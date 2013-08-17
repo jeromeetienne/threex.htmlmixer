@@ -34,7 +34,7 @@ THREEx.HtmlMixer.Context	= function(frontRenderer, scene, camera){
 	document.body.appendChild( rendererCSS.domElement )
 
 	if( frontRenderer.domElement.parentElement ){
-		renderer.domElement.parentElement.removeChild(frontRenderer.domElement)
+		frontRenderer.domElement.parentElement.removeChild(frontRenderer.domElement)
 	}
 	rendererCSS.domElement.appendChild( frontRenderer.domElement )
 	this.frontRenderer	= frontRenderer
