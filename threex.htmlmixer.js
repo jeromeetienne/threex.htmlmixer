@@ -25,13 +25,14 @@ THREEx.HtmlMixer.Context	= function(frontRenderer, scene, camera){
 
 	var rendererCSS	= new THREE.CSS3DRenderer()
 	// TODO to make generic
-	rendererCSS.setSize( window.innerWidth, window.innerHeight );
+	rendererCSS.setSize( window.innerWidth, window.innerHeight )
 	rendererCSS.domElement.style.position	= 'absolute'
 	rendererCSS.domElement.style.top	= 0
 	rendererCSS.domElement.style.margin	= 0
 	rendererCSS.domElement.style.padding	= 0
 	rendererCSS.domElement.style.zIndex	= -1
 	document.body.appendChild( rendererCSS.domElement )
+	this.rendererCSS= rendererCSS
 
 	if( frontRenderer.domElement.parentElement ){
 		frontRenderer.domElement.parentElement.removeChild(frontRenderer.domElement)
