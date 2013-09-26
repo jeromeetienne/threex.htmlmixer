@@ -6,33 +6,30 @@ It is based on
 ["Mixing HTML Pages Inside Your WebGL"](http://learningthreejs.com/blog/2013/04/30/closing-the-gap-between-html-and-webgl/)
 post on [learningthree.js blog](http://learningthreejs.com)
 
-Here is a [basic example](http://jeromeetienne.github.io/threex.htmlmixer/examples/basic.html) and its [source](https://github.com/jeromeetienne/threex.htmlmixer/blob/master/examples/basic.html)
+
+Show Don't Tell
+===============
+* [examples/basic.html](http://jeromeetienne.github.io/threex.htmlmixer/examples/basic.html)
+\[[view source](https://github.com/jeromeetienne/threex.htmlmixer/blob/master/examples/basic.html)\] :
+It shows a very basic usage.
+* [examples/select.html](http://jeromeetienne.github.io/threex.htmlmixer/examples/basic.html)
+\[[view source](https://github.com/jeromeetienne/threex.htmlmixer/blob/master/examples/basic.html)\] :
+It shows a various possible 3rd party widget iframe available on the web.
 
 How To Install It
 =================
 
-You can install it manually or with
-[bower](http://bower.io/).
-for the manual version, first include ```threex.htmlmixer.js``` with the usual
+You can install it via script tag
 
 ```html
 <script src='threex.htmlmixer.js'></script>
 ```
 
-or with
-[bower](http://bower.io/) 
-you type the following to install the package.
+Or you can install with [bower](http://bower.io/), as you wish.
 
 ```bash
 bower install threex.htmlmixer
 ```
-
-then you add that in your html
-
-```html
-<script src="bower_components/threex.htmlmixer/threex.htmlmixer.js"></script>
-```
-
 
 How to Use It
 =============

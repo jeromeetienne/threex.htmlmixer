@@ -107,19 +107,20 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 		.multiplyScalar(mixerContext.cssFactor/(elementWidth/planeW))
 
 	object3d.addEventListener('added', function(event){
-		updateFcts.push(function(delta, now){
-			// TODO compute world position and use it
-			cssObject.position
-				.copy(object3d.position)
-				.multiplyScalar(mixerContext.cssFactor)
-
-			var scale	= elementWidth/(geometry.width*object3d.scale.x)
-			cssObject.scale.set(1,1,1).multiplyScalar(mixerContext.cssFactor/scale)
-		})
 		mixerContext.cssScene.add(cssObject)
 	})
 	object3d.addEventListener('removed', function(event){
-		console.error('not yet implemented')
+		mixerContext.cssScene.remove(cssObject)
+	})
+
+	updateFcts.push(function(delta, now){
+		// TODO compute world position and use it
+		cssObject.position
+			.copy(object3d.position)
+			.multiplyScalar(mixerContext.cssFactor)
+
+		var scale	= elementWidth/(geometry.width*object3d.scale.x)
+		cssObject.scale.set(1,1,1).multiplyScalar(mixerContext.cssFactor/scale)
 	})
 };
 
