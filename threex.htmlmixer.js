@@ -100,6 +100,7 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 
 	// create a CSS3DObject to display element
 	var cssObject		= new THREE.CSS3DObject( domElement )
+	this.cssObject		= cssObject
 	// synchronize cssObject position/rotation with planeMesh position/rotation 
 	cssObject.quaternion	= object3d.quaternion
 
