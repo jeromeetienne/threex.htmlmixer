@@ -78,6 +78,14 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 1
 	opts.planeH	= opts.planeH !== undefined	? opts.planeH	: 3/4
 
+	// update functions
+	var updateFcts	= []
+	this.update	= function(delta, now){
+		updateFcts.forEach(function(updateFct){
+			updateFct(delta, now)
+		})
+	}
+
 	var planeW	= opts.planeW
 	var planeH	= opts.planeH
 	var planeMaterial   = new THREE.MeshBasicMaterial({
@@ -89,7 +97,6 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	var geometry	= new THREE.PlaneGeometry( opts.planeW, opts.planeH )
 	var object3d	= new THREE.Mesh( geometry, planeMaterial )
 	this.object3d	= object3d
-
 
 	// width of iframe in pixels
 	var aspectRatio		= planeH / planeW

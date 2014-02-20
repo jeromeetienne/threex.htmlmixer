@@ -18,6 +18,7 @@
 	<button onclick='switchValue(this.innerText);'>blip</button> (in flash)<br/>
 </div>
 <script>
+(function(){
 	var renderer	= new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
@@ -93,6 +94,9 @@
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	scene.add(mixerPlane.object3d)
+	updateFcts.push(function(delta, now){
+		mixerPlane.update(delta, now)
+	})	
 
 	function switchValue(value){
 		scene.remove(mixerPlane.object3d)
@@ -178,4 +182,5 @@
 			updateFn(deltaMsec/1000, nowMsec/1000)
 		})
 	})
+})()
 </script></body>

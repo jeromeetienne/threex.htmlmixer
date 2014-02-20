@@ -37,7 +37,10 @@
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	mixerPlane.object3d.scale.multiplyScalar(2)
 	scene.add(mixerPlane.object3d)
-	
+	updateFcts.push(function(delta, now){
+		mixerPlane.update(delta, now)
+	})
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Make it move							//
 	//////////////////////////////////////////////////////////////////////////////////
