@@ -122,9 +122,14 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	})
 
 	updateFcts.push(function(delta, now){
-		// TODO compute world position and use it
+		// get world position
+		object3d.updateMatrixWorld();
+		var worldMatrix	= object3d.matrixWorld;
+		var position	= new THREE.Vector3().getPositionFromMatrix(worldMatrix);
+
+
 		cssObject.position
-			.copy(object3d.position)
+			.copy(position)
 			.multiplyScalar(mixerContext.cssFactor)
 
 		var scale	= elementWidth/(geometry.width*object3d.scale.x)
