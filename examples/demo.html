@@ -18,7 +18,6 @@
 	<button onclick='switchValue(this.innerText);'>blip</button> (in flash)<br/>
 </div>
 <script>
-(function(){
 	var renderer	= new THREE.WebGLRenderer();
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
@@ -182,5 +181,4 @@
 			updateFn(deltaMsec/1000, nowMsec/1000)
 		})
 	})
-})()
 </script></body>
