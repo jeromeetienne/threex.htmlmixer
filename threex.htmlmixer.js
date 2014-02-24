@@ -45,7 +45,7 @@ THREEx.HtmlMixer.Context	= function(frontRenderer, scene, camera){
 	frontRenderer.domElement.style.padding	= 0
 
 	// build cssCamera
-	var cssFactor	= 100
+	var cssFactor	= 50
 	this.cssFactor	= cssFactor
 	var cssCamera	= new THREE.PerspectiveCamera(camera.fov, camera.aspect, camera.near*cssFactor, camera.far*cssFactor);
 	cssCamera.quaternion	= camera.quaternion
