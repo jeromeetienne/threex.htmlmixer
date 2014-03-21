@@ -43,6 +43,7 @@ THREEx.HtmlMixer.Context	= function(frontRenderer, scene, camera){
 	frontRenderer.domElement.style.top	= 0
 	frontRenderer.domElement.style.margin	= 0
 	frontRenderer.domElement.style.padding	= 0
+	frontRenderer.domElement.style.pointerEvents	= 'none'
 
 	// build cssCamera
 	var cssFactor	= 50
