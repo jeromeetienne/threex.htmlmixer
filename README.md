@@ -1,11 +1,7 @@
 threex.htmlmixer
 ================
 
-threex.htmlmixer is a three.js extension to seemlessly integrate actual dom elements in your webgl.
-It is based on 
-["Mixing HTML Pages Inside Your WebGL"](http://learningthreejs.com/blog/2013/04/30/closing-the-gap-between-html-and-webgl/)
-post on [learningthree.js blog](http://learningthreejs.com)
-
+threex.htmlmixer is a [three.js game extension](http://www.threejsgames.com/extensions/) to seemlessly integrate actual dom elements in your game. It uses a clever blending trick to mix CSS3 and Webgl. See details in ["Mixing HTML Pages Inside Your WebGL"](http://learningthreejs.com/blog/2013/04/30/closing-the-gap-between-html-and-webgl/) post on [learningthree.js blog](http://learningthreejs.com). It provides a great new way for the player to interact with the 3d . For example you can include youtube players inside a movie screen. Additionally you can easily access the content of the whole web and include it in your three.js game. 
 
 Show Don't Tell
 ===============
