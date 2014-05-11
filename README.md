@@ -12,6 +12,10 @@ It shows a very basic usage.
 \[[view source](https://github.com/jeromeetienne/threex.htmlmixer/blob/master/examples/basic.html)\] :
 It shows a various possible 3rd party widget iframe available on the web.
 
+A Screenshot
+============
+[![screenshot](https://raw.githubusercontent.com/jeromeetienne/threex.htmlmixer/master/examples/images/screenshot-threex-htmlmixer-512x512.jpg)](http://jeromeetienne.github.io/threex.htmlmixer/examples/basic.html)
+
 How To Install It
 =================
 
