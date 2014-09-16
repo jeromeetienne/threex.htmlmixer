@@ -46,11 +46,11 @@
 
 	// create the iframe element
 	var domElement	= document.createElement('iframe')
-	domElement.src	= 'http://jeromeetienne.github.io/threex/';
+	domElement.src	= 'http://threejs.org/';
 	domElement.style.border	= 'none'
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-	mixerPlane.object3d.scale.multiplyScalar(2)
+	// mixerPlane.object3d.scale.multiplyScalar(2)
 	scene.add(mixerPlane.object3d)
 	updateFcts.push(function(delta, now){
 		mixerPlane.update(delta, now)
