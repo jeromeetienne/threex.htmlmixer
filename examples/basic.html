@@ -15,11 +15,7 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		create THREEx.HtmlMixer						//
 	//////////////////////////////////////////////////////////////////////////////////
-
 	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
-	updateFcts.push(function(delta, now){
-		mixerContext.update(delta, now)
-	})
 	
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -30,6 +26,7 @@
 	// create the iframe element
 	var domElement	= document.createElement('iframe')
 	domElement.src	= 'http://jeromeetienne.github.io/threex/';
+	var url		= 'http://threejs.org/';
 	domElement.style.border	= 'none'
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
@@ -45,7 +42,7 @@
 	
 	// update it
 	updateFcts.push(function(delta, now){
-		// mixerPlane.object3d.rotation.y += Math.PI * 2 * delta * 0.1;
+		mixerPlane.object3d.rotation.y += Math.PI * 2 * delta * 0.1;
 	})
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -76,6 +73,14 @@
 		camera.position.x += (mouse.x*5 - camera.position.x) * (delta*3)
 		camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3)
 		camera.lookAt( scene.position )
+	})
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		update mixerContext
+	//////////////////////////////////////////////////////////////////////////////////
+	updateFcts.push(function(delta, now){
+		// NOTE: it must be after camera mode
+		mixerContext.update(delta, now)
 	})
 
 

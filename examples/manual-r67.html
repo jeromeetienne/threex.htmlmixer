@@ -1,7 +1,7 @@
 <!DOCTYPE html>
-<script src='vendor/three.js/build/three.min.js'></script>
-<script src='vendor/three.js/examples/js/renderers/CSS3DRenderer.js'></script>
-<script src='../threex.htmlmixer.js'></script>
+<script src='vendor/three-r67.js/build/three.js'></script>
+<script src='vendor/three-r67.js/examples/js/renderers/CSS3DRenderer.js'></script>
+<script src='../threex.htmlmixer-r67.js'></script>
 <body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
 <div style='position:absolute'>
 	<button onclick='switchValue(this.innerText);'>default</button><br/>
@@ -18,7 +18,10 @@
 	<button onclick='switchValue(this.innerText);'>blip</button> (in flash)<br/>
 </div>
 <script>
-	var renderer	= new THREE.WebGLRenderer();
+	var renderer	= new THREE.WebGLRenderer({
+		alpha	: true
+	});
+	renderer.setClearColor(new THREE.Color('black'), 0)
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
@@ -76,9 +79,6 @@
 	//////////////////////////////////////////////////////////////////////////////////
 
 	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
-	updateFcts.push(function(delta, now){
-		mixerContext.update(delta, now)
-	})
 	
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -88,19 +88,25 @@
 
 	// create the iframe element
 	var domElement	= document.createElement('iframe')
-	domElement.src	= 'http://jeromeetienne.github.io/threex/';
+	// domElement.src	= 'http://jeromeetienne.github.io/threex/';
+	domElement.src	= 'http:////www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1'
 	domElement.style.border	= 'none'
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	scene.add(mixerPlane.object3d)
 	updateFcts.push(function(delta, now){
+		mixerPlane.object3d.rotation.y += Math.PI * 2 * delta * 0.1;
+	})
+	updateFcts.push(function(delta, now){
 		mixerPlane.update(delta, now)
 	})
+
 
 	function switchValue(value){
 		scene.remove(mixerPlane.object3d)
 		if( value === 'default' ){
 			var url		= 'http://learningthreejs.com';
+			var url		= 'http:////www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1'
 			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 			scene.add(mixerPlane.object3d)
 		}else if( value === 'threex' ){
@@ -161,6 +167,9 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the scene						//
 	//////////////////////////////////////////////////////////////////////////////////
+	updateFcts.push(function(delta, now){
+		mixerContext.update(delta, now)
+	})
 	updateFcts.push(function(){
 		renderer.render( scene, camera );		
 	})
