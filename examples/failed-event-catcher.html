@@ -32,11 +32,21 @@
 	domElement.style.zIndex		= '10'
 	domElement.style.width		= '100%'
 	domElement.style.height		= window.innerHeight+'px'
-	domElement.style.backgroundColor= 'rgba(0,0,0,0.5)'
+	domElement.style.backgroundColor= 'rgba(0,0,0,0.2)'
 	mixerContext.rendererCSS.domElement.insertBefore(domElement, renderer.domElement)
 	
-	domElement.addEventListener('click', function(){
+	// var parentElement	= document.body
+	// if(parentElement.firstChild){
+	// 	parentElement.insertBefore(domElement, parentElement.firstChild);
+	// }else{
+	// 	parentElement.appendChild(domElement);
+	// }
+
+
+	domElement.addEventListener('click', function(event){
 		console.log('clicked on event catcher')
+		event.stopPropagation()
+		event.preventDefault()
 	})
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -85,7 +95,9 @@
 	//		Camera Controls							//
 	//////////////////////////////////////////////////////////////////////////////////
 	var mouse	= {x : 0, y : 0}
-	document.addEventListener('mousemove', function(event){
+	domElement.focus()
+console.log('')
+	domElement.addEventListener('mousemove', function(event){
 		mouse.x	= (event.clientX / window.innerWidth ) - 0.5
 		mouse.y	= (event.clientY / window.innerHeight) - 0.5
 	}, false)

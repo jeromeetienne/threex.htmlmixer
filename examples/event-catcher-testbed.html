@@ -1,0 +1,69 @@
+<!doctype html>
+<body style='margin: 0px;'>
+	<style>
+		.fullpage {
+			width: 100%;
+			height: 100%;
+			position: absolute;
+		}
+	</style>
+
+
+	<div id='backEventCatcher' class='fullpage'>
+		<div id='css3dElement' class='fullpage'>
+ 			<!-- without canvas element -->
+<!-- 			<div id='webglCanvas' class='fullpage'>
+				<div id='frontEventCatcher' class='fullpage'>
+				</div>
+			</div>
+ -->
+ 			<!-- with canvas element -->
+			<div id='frontEventCatcher' class='fullpage'>
+				<canvas id='webglCanvas' class='fullpage' style='pointer-events: none'></canvas>
+			</div>
+		</div>
+	</div>
+
+
+	<script>
+	var eventType	= 'mousedown'
+	var selectors	= []
+	selectors.push('#frontEventCatcher')
+	selectors.push('#webglCanvas')
+	selectors.push('#css3dElement')
+	selectors.push('#backEventCatcher')
+	selectors.forEach(function(selector){
+		var element	= document.querySelector(selector)
+		element.addEventListener(eventType, function(event){
+			console.log(eventType, 'on', element.id)
+		}, false)		
+	})
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		console.log to screen
+	//////////////////////////////////////////////////////////////////////////////////
+	;(function(){
+		var container	= document.createElement('div')
+		container.dataset.name		= 'consoleLogOnScreen'
+		container.style.width		= '100%';
+		container.style.height		= '100%';
+		container.style.position	= 'absolute';
+		container.style.fontSize	= '100%';
+		container.style.margin		= '1em';
+		document.body.insertBefore(container, document.body.firstChild)
+
+		console.log	= function(){
+			var args	= Array.prototype.slice.call(arguments, 0);
+			var text	= args.join(' ')
+
+			text		= '[' + /\d\d\:\d\d\:\d\d/.exec( new Date() )[ 0 ] + '] ' + text
+
+			var line	= document.createElement('div')
+			line.innerText	= text
+
+			// container.insertBefore(line, container.firstChild)
+			container.appendChild(line)
+		}
+	})()
+</script></body>

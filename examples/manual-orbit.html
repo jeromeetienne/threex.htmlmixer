@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<!-- for ios and maybe other mobiles -->
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<script src='vendor/three-r67.js/build/three.js'></script>
+<script src='vendor/three-r67.js/examples/js/controls/OrbitControls.js'></script>
+<body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
+<script>
+	var renderer	= new THREE.WebGLRenderer({
+		alpha	: true
+	});
+	renderer.setClearColor(new THREE.Color('black'), 0)
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+
+	var updateFcts	= [];
+	var scene	= new THREE.Scene();
+	var camera	= new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000 );
+	camera.position.z = 1;
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		add objects in the scene					//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var geometry	= new THREE.TorusKnotGeometry(0.25-0.06, 0.06);
+	var material	= new THREE.MeshNormalMaterial();
+	var mesh	= new THREE.Mesh( geometry, material );
+	scene.add( mesh );
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Camera Controls							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var controls	= new THREE.OrbitControls(camera)
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		render the scene						//
+	//////////////////////////////////////////////////////////////////////////////////
+	updateFcts.push(function(){
+		renderer.render( scene, camera );		
+	})
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	//		handle resize							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	function onResize(){
+		// notify the renderer of the size change
+		renderer.setSize( window.innerWidth, window.innerHeight )
+		// update the camera
+		camera.aspect	= window.innerWidth / window.innerHeight
+		camera.updateProjectionMatrix()		
+	}
+	
+	window.addEventListener('resize', onResize, false)
+	setTimeout(onResize, 1000)	
+	//////////////////////////////////////////////////////////////////////////////////
+	//		loop runner							//
+	//////////////////////////////////////////////////////////////////////////////////
+	var lastTimeMsec= null
+	requestAnimationFrame(function animate(nowMsec){
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		// call each update function
+		updateFcts.forEach(function(updateFn){
+			updateFn(deltaMsec/1000, nowMsec/1000)
+		})
+	})
+</script></body>

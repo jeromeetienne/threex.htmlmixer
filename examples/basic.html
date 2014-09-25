@@ -25,8 +25,8 @@
 
 	// create the iframe element
 	var domElement	= document.createElement('iframe')
-	domElement.src	= 'http://jeromeetienne.github.io/threex/';
-	var url		= 'http://threejs.org/';
+	// domElement.src	= 'http://jeromeetienne.github.io/threex/';
+	domElement.src	= 'http://threejs.org/';
 	domElement.style.border	= 'none'
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
@@ -90,7 +90,24 @@
 	updateFcts.push(function(){
 		renderer.render( scene, camera );		
 	})
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		handle resize							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	function onResize(){
+		// notify the renderer of the size change
+		renderer.setSize( window.innerWidth, window.innerHeight )
+		mixerContext.rendererCSS.setSize( window.innerWidth, window.innerHeight )
+		// update the camera
+		camera.aspect	= window.innerWidth / window.innerHeight
+		camera.updateProjectionMatrix()		
+	}
 	
+	window.addEventListener('resize', onResize, false)
+	window.addEventListener('load', onResize, false)
+	setTimeout(onResize, 100)
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		loop runner							//
 	//////////////////////////////////////////////////////////////////////////////////

@@ -6,11 +6,11 @@ THREEx.HtmlMixer	= {}
 /**
  * define a context for THREEx.HtmlMixer
  * 
- * @param  {THREE.WebGLRenderer|THREE.CanvasRenderer} rendererWebgl the renderer in front
+ * @param  {THREE.WebGLRenderer|THREE.CanvasRenderer} frontRenderer the renderer in front
  * @param  {THREE.Scene} scene the original scene
  * @param  {THREE.Camera} camera the camera used for the last view
  */
-THREEx.HtmlMixer.Context	= function(rendererWebgl, scene, camera){
+THREEx.HtmlMixer.Context	= function(frontRenderer, scene, camera){
 	// update functions
 	var updateFcts	= []
 	this.update	= function(delta, now){
@@ -23,25 +23,30 @@ THREEx.HtmlMixer.Context	= function(rendererWebgl, scene, camera){
 	//		comment								//
 	//////////////////////////////////////////////////////////////////////////////////
 
-	var rendererCss	= new THREE.CSS3DRenderer()
+	var rendererCSS	= new THREE.CSS3DRenderer()
 	// TODO to make generic
-	// rendererCss.domElement.style.position	= 'absolute'
-	// rendererCss.domElement.style.top	= 0
-	// rendererCss.domElement.style.margin	= 0
-	// rendererCss.domElement.style.padding	= 0
-	// rendererCss.domElement.style.zIndex	= -1
-	this.rendererCss= rendererCss
+	rendererCSS.setSize( window.innerWidth, window.innerHeight )
+	rendererCSS.domElement.style.position	= 'absolute'
+	rendererCSS.domElement.style.top	= 0
+	rendererCSS.domElement.style.margin	= 0
+	rendererCSS.domElement.style.padding	= 0
+	rendererCSS.domElement.style.zIndex	= -1
+	document.body.appendChild( rendererCSS.domElement )
+	this.rendererCSS= rendererCSS
 
-
-	this.rendererWebgl	= rendererWebgl
-	// rendererWebgl.domElement.style.position	= 'absolute'
-	// rendererWebgl.domElement.style.top	= 0
-	// rendererWebgl.domElement.style.margin	= 0
-	// rendererWebgl.domElement.style.padding	= 0
-	// rendererWebgl.domElement.style.pointerEvents	= 'none'
+	if( frontRenderer.domElement.parentElement ){
+		frontRenderer.domElement.parentElement.removeChild(frontRenderer.domElement)
+	}
+	rendererCSS.domElement.appendChild( frontRenderer.domElement )
+	this.frontRenderer	= frontRenderer
+	frontRenderer.domElement.style.position	= 'absolute'
+	frontRenderer.domElement.style.top	= 0
+	frontRenderer.domElement.style.margin	= 0
+	frontRenderer.domElement.style.padding	= 0
+	frontRenderer.domElement.style.pointerEvents	= 'none'
 
 	// build cssCamera
-	var cssFactor	= 1000
+	var cssFactor	= 100
 	this.cssFactor	= cssFactor
 	var cssCamera	= new THREE.PerspectiveCamera(camera.fov, camera.aspect, camera.near*cssFactor, camera.far*cssFactor);
 
@@ -53,24 +58,13 @@ THREEx.HtmlMixer.Context	= function(rendererWebgl, scene, camera){
 			.multiplyScalar(cssFactor)
 	})
 
+
 	// create a new scene to hold CSS
 	var cssScene = new THREE.Scene();
 	this.cssScene= cssScene
 	
-
-	this.autoUpdateObjects	= true
 	updateFcts.push(function(delta, now){
-		if( this.autoUpdateObjects !== true )	return
-		cssScene.traverse(function(cssObject){
-			if( cssObject instanceof THREE.Scene === true )	return
-			var mixerPlane	= cssObject.userData.mixerPlane
-			if( mixerPlane === undefined )	return
-			mixerPlane.update()
-		})		
-	}.bind(this))
-
-	updateFcts.push(function(delta, now){
-		rendererCss.render(cssScene, cssCamera)
+		rendererCSS.render(cssScene, cssCamera)
 	})
 }
 
@@ -85,9 +79,7 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	opts		= opts	|| {}
 	opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 1024
 	opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 1
-	opts.planeH	= opts.planeH !== undefined	? opts.planeH	: 3/4
-
-	this.domElement	= domElement
+	opts.planeH	= opts.planeH !== undefined	? opts.planeH	: opts.planeW / (4/3)
 
 	// update functions
 	var updateFcts	= []
@@ -119,17 +111,14 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	// create a CSS3DObject to display element
 	var cssObject		= new THREE.CSS3DObject( domElement )
 	this.cssObject		= cssObject
+
 	cssObject.scale.set(1,1,1)
 		.multiplyScalar(mixerContext.cssFactor/(elementWidth/planeW))
-
-	// hook cssObhect to mixerPlane
-	cssObject.userData.mixerPlane	= this
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		hook event so cssObject is attached to cssScene when object3d is added/removed
 	//////////////////////////////////////////////////////////////////////////////////
 	object3d.addEventListener('added', function(event){
-		console.log('added', cssObject)
 		mixerContext.cssScene.add(cssObject)
 	})
 	object3d.addEventListener('removed', function(event){
@@ -182,8 +171,7 @@ THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
 	domElement.src	= url
 	domElement.style.border	= 'none'
 
-var onIos	= navigator.platform.match(/iP(hone|od|ad)/) !== null ? true : false
-if( onIos ){
+if( true ){
 	// ios workaround 
 	// - see http://dev.magnolia-cms.com/blog/2012/05/strategies-for-the-iframe-on-the-ipad-problem/
 	// - and the demo 

@@ -1,9 +1,12 @@
 <!DOCTYPE html>
-<script src='vendor/three.js/build/three.min.js'></script>
-<script src='vendor/three.js/examples/js/renderers/CSS3DRenderer.js'></script>
-<script src='../threex.htmlmixer.js'></script>
+<!-- for ios and maybe other mobiles -->
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+<script src='vendor/three-r67.js/build/three.js'></script>
+<script src='vendor/three-r67.js/examples/js/renderers/CSS3DRenderer.js'></script>
+<script src='vendor/three-r67.js/examples/js/controls/OrbitControls.js'></script>
+<script src='../threex.htmlmixer-r67.js'></script>
 <body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
-<div style='position:absolute'>
+<div style='position:absolute; z-index: 10;'>
 	<button onclick='switchValue(this.textContent);'>default</button><br/>
 	<button onclick='switchValue(this.textContent);'>threex</button><br/>
 	<button onclick='switchValue(this.textContent);'>three.js</button><br/>
@@ -18,31 +21,55 @@
 	<button onclick='switchValue(this.textContent);'>blip</button> (in flash)<br/>
 </div>
 <script>
-	var renderer	= new THREE.WebGLRenderer();
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		console.log to screen
+	//////////////////////////////////////////////////////////////////////////////////
+	;(function(){
+return
+		var container	= document.createElement('div')
+		container.dataset.name		= 'consoleLogOnScreen'
+		container.style.width		= '100%';
+		container.style.height		= '100%';
+		container.style.position	= 'absolute';
+		container.style.fontSize	= '100%';
+		container.style.margin		= '1em';
+		container.style.pointerEvents	= 'none'
+		container.style.zIndex		= 1000
+		document.body.insertBefore(container, document.body.firstChild)
+
+		oldConsoleLog	= console.log
+
+		console.log	= function(){
+			// forward to previous console.log
+			oldConsoleLog.apply(console, arguments)
+			// build text from arguments
+			var args	= Array.prototype.slice.call(arguments, 0);
+			var text	= args.join(' ')
+
+			text		= '[' + /\d\d\:\d\d\:\d\d/.exec( new Date() )[ 0 ] + '] ' + text
+
+			var line	= document.createElement('div')
+			line.innerText	= text
+
+			// container.insertBefore(line, container.firstChild)
+			container.appendChild(line)
+		}
+	})()
+
+	var renderer	= new THREE.WebGLRenderer({
+		alpha	: true
+	});
+	renderer.setClearColor(new THREE.Color('black'), 0)
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
-	var updateFcts	= [];
+	var onRenderFcts	= [];
 	var scene	= new THREE.Scene();
-	var camera	= new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.01, 1000 );
-	camera.position.z = 1.5;
+	var camera	= new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000 );
+	camera.position.z = 1
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	//		handle resize							//
-	//////////////////////////////////////////////////////////////////////////////////
-
-	function onResize(){
-		// notify the renderer of the size change
-		renderer.setSize( window.innerWidth, window.innerHeight )
-		mixerContext.rendererCSS.setSize( window.innerWidth, window.innerHeight )
-		// update the camera
-		camera.aspect	= window.innerWidth / window.innerHeight
-		camera.updateProjectionMatrix()		
-	}
-	
-	window.addEventListener('resize', onResize, false)
-	setTimeout(onResize, 100)
-
 	//////////////////////////////////////////////////////////////////////////////////
 	//		add objects in the scene					//
 	//////////////////////////////////////////////////////////////////////////////////
@@ -59,51 +86,114 @@
 	mesh.position.set(-0.5,0,-0.5)
 	scene.add( mesh );
 
-	//////////////////////////////////////////////////////////////////////////////////
-	//		Camera Controls							//
-	//////////////////////////////////////////////////////////////////////////////////
-	var mouse	= {x : 0, y : 0}
-	document.addEventListener('mousemove', function(event){
-		mouse.x	= (event.clientX / window.innerWidth ) - 0.5
-		mouse.y	= (event.clientY / window.innerHeight) - 0.5
-	}, false)
-	updateFcts.push(function(delta, now){
-		camera.position.x += (mouse.x*10 - camera.position.x) * (delta*3)
-		camera.position.y += (mouse.y*5 - camera.position.y) * (delta*3)
-		camera.lookAt( scene.position )
-	})
-
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		create THREEx.HtmlMixer						//
 	//////////////////////////////////////////////////////////////////////////////////
 
 	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
-	updateFcts.push(function(delta, now){
-		mixerContext.update(delta, now)
-	})
-	
 
+	window.addEventListener('resize', function(){
+		// notify the renderer of the size change
+		mixerContext.rendererCss.setSize( window.innerWidth, window.innerHeight )
+	}, false)
+
+ 	// set up rendererCss
+	var rendererCss		= mixerContext.rendererCss
+	rendererCss.setSize( window.innerWidth, window.innerHeight )
+	// set up rendererWebgl
+	var rendererWebgl	= mixerContext.rendererWebgl
+	rendererWebgl.setSize( window.innerWidth, window.innerHeight )
+
+
+
+
+	var css3dElement		= rendererCss.domElement
+	css3dElement.id			= 'css3dElement'
+	css3dElement.style.position	= 'absolute'
+	css3dElement.style.top		= '0px'
+	css3dElement.style.width	= '100%'
+	css3dElement.style.height	= '100%'
+	var container	= document.body
+	container.appendChild( css3dElement )
+
+	// var frontEventCatcher		= document.createElement('div')
+	// frontEventCatcher.id		= 'frontEventCatcher'
+	// frontEventCatcher.style.position= 'absolute'
+	// frontEventCatcher.style.top	= '0px'
+	// frontEventCatcher.style.width	= '100%'
+	// frontEventCatcher.style.height	= '100%'
+	// // frontEventCatcher.style.pointerEvents	= 'none'
+	// var container	= css3dElement
+	// container.appendChild( frontEventCatcher )
+
+	
+	var webglCanvas		= rendererWebgl.domElement
+	webglCanvas.id			= 'webglCanvas'
+	webglCanvas.style.position	= 'absolute'
+	webglCanvas.style.top		= '0px'
+	webglCanvas.style.width		= '100%'
+	webglCanvas.style.height	= '100%'
+	webglCanvas.style.pointerEvents	= 'none'
+	var container	= css3dElement
+	container.appendChild( webglCanvas )
+
+	// var backEventCatcher	= document.createElement('div')
+	// backEventCatcher.id	= 'backEventCatcher'
+	// backEventCatcher.style.position	= 'absolute'
+	// backEventCatcher.style.top	= '0px'
+	// backEventCatcher.style.width	= '100%'
+	// backEventCatcher.style.height	= '100%'
+	// document.body.appendChild( backEventCatcher )
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Comment								//
+	//////////////////////////////////////////////////////////////////////////////////
+	var eventType	= 'mousedown'
+	var selectors	= []
+	selectors.push('#frontEventCatcher')
+	selectors.push('#webglCanvas')
+	selectors.push('#css3dElement')
+	selectors.push('#backEventCatcher')
+	selectors.forEach(function(selector){
+		var element	= document.querySelector(selector)
+		if( element === null ){
+			console.log('dont listener on ',eventType, 'for', selector)
+			return
+		}
+		element.addEventListener(eventType, function(event){
+			console.log(eventType, 'on', element.id)
+		}, false)		
+	})
 	//////////////////////////////////////////////////////////////////////////////////
 	//		create a Plane for THREEx.HtmlMixer				//
 	//////////////////////////////////////////////////////////////////////////////////
 	
 
 	// create the iframe element
-	var domElement	= document.createElement('iframe')
-	domElement.src	= 'http://jeromeetienne.github.io/threex/';
-	domElement.style.border	= 'none'
-	// create the plane
-	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
+	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, 'http://threejs.org')
 	scene.add(mixerPlane.object3d)
-	updateFcts.push(function(delta, now){
-		mixerPlane.update(delta, now)
+
+	onRenderFcts.push(function(){
+		var object3d	= mixerPlane.object3d
+		object3d.rotation.y	+= 0.01
 	})
+
+	// var url		= 'images/UV_Grid_Sm.jpg'
+	// var mixerPlane	= THREEx.HtmlMixer.createPlaneFromImage(mixerContext, url)
+	// scene.add(mixerPlane.object3d)
+
+
+	// var object3d	= mixerPlane.object3d
+	// object3d.rotation.y	= Math.PI /3
+	
+	// switchValue(location.hash.substr(1) || 'default')
 
 	function switchValue(value){
 		scene.remove(mixerPlane.object3d)
 		if( value === 'default' ){
 			var url		= 'http://learningthreejs.com';
+			// var url		= 'http:////www.youtube.com/embed/Y4fIPY31sDo'
 			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 			scene.add(mixerPlane.object3d)
 		}else if( value === 'threex' ){
@@ -159,12 +249,26 @@
 		// update location hash
 		location.hash	= value
 	}
-	switchValue(location.hash.substr(1) || 'default')
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		handle resize							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	window.addEventListener('resize', function(){
+		// notify the renderer of the size change
+		renderer.setSize( window.innerWidth, window.innerHeight )
+		// update the camera
+		camera.aspect	= window.innerWidth / window.innerHeight
+		camera.updateProjectionMatrix()		
+	}, false)
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the scene						//
 	//////////////////////////////////////////////////////////////////////////////////
-	updateFcts.push(function(){
+	onRenderFcts.push(function(delta, now){
+		mixerContext.update()
+	})
+	onRenderFcts.push(function(){
 		renderer.render( scene, camera );		
 	})
 	
@@ -180,8 +284,8 @@
 		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
 		lastTimeMsec	= nowMsec
 		// call each update function
-		updateFcts.forEach(function(updateFn){
-			updateFn(deltaMsec/1000, nowMsec/1000)
+		onRenderFcts.forEach(function(onRenderFct){
+			onRenderFct(deltaMsec/1000, nowMsec/1000)
 		})
 	})
 </script></body>
