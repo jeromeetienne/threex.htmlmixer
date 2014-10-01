@@ -1,17 +1,26 @@
 <!DOCTYPE html>
 <!-- for ios and maybe other mobiles -->
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
 <script src='vendor/three-r67.js/build/three.js'></script>
 <script src='vendor/three-r67.js/examples/js/renderers/CSS3DRenderer.js'></script>
 <script src='vendor/three-r67.js/examples/js/controls/OrbitControls.js'></script>
 <script src='../threex.htmlmixer-r67.js'></script>
+
+<!-- for jwplayer only  -->
+<script src="http://jwpsrv.com/library/Dr2UtkbpEeSbHiIAC0WXxA.js"></script>
+
 <body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
 <div style='position:absolute; z-index: 10;'>
 	<button onclick='switchValue(this.textContent);'>default</button><br/>
 	<button onclick='switchValue(this.textContent);'>threex</button><br/>
 	<button onclick='switchValue(this.textContent);'>three.js</button><br/>
 	<button onclick='switchValue(this.textContent);'>vimeo</button><br/>
-	<button onclick='switchValue(this.textContent);'>youtube</button> (may be flash depending on <a href='http://youtube.com/html5'>options</a>)<br/>
+	<button onclick='switchValue(this.textContent);'>youtube</button><br/>
+	 <!-- (may be flash depending on <a href='http://youtube.com/html5'>options</a>)<br/> -->
+	<button onclick='switchValue(this.textContent);'>video</button><br/>
+	<button onclick='switchValue(this.textContent);'>pdf</button><br/>
+	<button onclick='switchValue(this.textContent);'>jwplayer</button><br/>
 	<button onclick='switchValue(this.textContent);'>imgur-raw</button><br/>
 	<button onclick='switchValue(this.textContent);'>github-badge</button><br/>
 	<button onclick='switchValue(this.textContent);'>dailymotion</button><br/>
@@ -58,6 +67,29 @@ return
 		}
 	})()
 
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Comment								//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var domElement	= document.body
+	// domElement.addEventListener( 'touchstart', function(event){
+	// 	event.preventDefault()
+	// }, false );
+	// domElement.addEventListener( 'touchend', function(event){
+	// 	event.preventDefault()
+	// }, false );
+	domElement.addEventListener( 'touchmove', function(event){
+		event.preventDefault()
+	}, false );
+	domElement.addEventListener( 'touchmove', function(event){
+		event.preventDefault()
+	}, true );
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Comment								//
+	//////////////////////////////////////////////////////////////////////////////////
+
 	var renderer	= new THREE.WebGLRenderer({
 		alpha	: true
 	});
@@ -77,13 +109,15 @@ return
 	var geometry	= new THREE.TorusKnotGeometry(0.25-0.06, 0.06);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.set(+0.5,0,+0.5)
+	mesh.position.set(+0.7,0,+0.5)
+	mesh.scale.multiplyScalar(1.5)
 	scene.add( mesh );
 	
 	var geometry	= new THREE.TorusKnotGeometry(0.25-0.06, 0.06);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
 	mesh.position.set(-0.5,0,-0.5)
+	mesh.scale.multiplyScalar(1.5)
 	scene.add( mesh );
 
 
@@ -93,10 +127,14 @@ return
 
 	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
 
+	// handle window resize for mixerContext
 	window.addEventListener('resize', function(){
-		// notify the renderer of the size change
 		mixerContext.rendererCss.setSize( window.innerWidth, window.innerHeight )
 	}, false)
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		mixerContext configuration and dom attachement
+	//////////////////////////////////////////////////////////////////////////////////
 
  	// set up rendererCss
 	var rendererCss		= mixerContext.rendererCss
@@ -104,8 +142,6 @@ return
 	// set up rendererWebgl
 	var rendererWebgl	= mixerContext.rendererWebgl
 	rendererWebgl.setSize( window.innerWidth, window.innerHeight )
-
-
 
 
 	var css3dElement		= rendererCss.domElement
@@ -116,17 +152,6 @@ return
 	css3dElement.style.height	= '100%'
 	var container	= document.body
 	container.appendChild( css3dElement )
-
-	// var frontEventCatcher		= document.createElement('div')
-	// frontEventCatcher.id		= 'frontEventCatcher'
-	// frontEventCatcher.style.position= 'absolute'
-	// frontEventCatcher.style.top	= '0px'
-	// frontEventCatcher.style.width	= '100%'
-	// frontEventCatcher.style.height	= '100%'
-	// // frontEventCatcher.style.pointerEvents	= 'none'
-	// var container	= css3dElement
-	// container.appendChild( frontEventCatcher )
-
 	
 	var webglCanvas		= rendererWebgl.domElement
 	webglCanvas.id			= 'webglCanvas'
@@ -137,34 +162,7 @@ return
 	webglCanvas.style.pointerEvents	= 'none'
 	var container	= css3dElement
 	container.appendChild( webglCanvas )
-
-	// var backEventCatcher	= document.createElement('div')
-	// backEventCatcher.id	= 'backEventCatcher'
-	// backEventCatcher.style.position	= 'absolute'
-	// backEventCatcher.style.top	= '0px'
-	// backEventCatcher.style.width	= '100%'
-	// backEventCatcher.style.height	= '100%'
-	// document.body.appendChild( backEventCatcher )
 	
-	//////////////////////////////////////////////////////////////////////////////////
-	//		Comment								//
-	//////////////////////////////////////////////////////////////////////////////////
-	var eventType	= 'mousedown'
-	var selectors	= []
-	selectors.push('#frontEventCatcher')
-	selectors.push('#webglCanvas')
-	selectors.push('#css3dElement')
-	selectors.push('#backEventCatcher')
-	selectors.forEach(function(selector){
-		var element	= document.querySelector(selector)
-		if( element === null ){
-			console.log('dont listener on ',eventType, 'for', selector)
-			return
-		}
-		element.addEventListener(eventType, function(event){
-			console.log(eventType, 'on', element.id)
-		}, false)		
-	})
 	//////////////////////////////////////////////////////////////////////////////////
 	//		create a Plane for THREEx.HtmlMixer				//
 	//////////////////////////////////////////////////////////////////////////////////
@@ -174,20 +172,19 @@ return
 	var mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, 'http://threejs.org')
 	scene.add(mixerPlane.object3d)
 
-	onRenderFcts.push(function(){
-		var object3d	= mixerPlane.object3d
-		object3d.rotation.y	+= 0.01
-	})
+	// onRenderFcts.push(function(){
+	// 	var object3d	= mixerPlane.object3d
+	// 	object3d.rotation.y	+= 0.01
+	// })
 
 	// var url		= 'images/UV_Grid_Sm.jpg'
 	// var mixerPlane	= THREEx.HtmlMixer.createPlaneFromImage(mixerContext, url)
 	// scene.add(mixerPlane.object3d)
 
-
-	// var object3d	= mixerPlane.object3d
-	// object3d.rotation.y	= Math.PI /3
-	
-	// switchValue(location.hash.substr(1) || 'default')
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Comment								//
+	//////////////////////////////////////////////////////////////////////////////////
+	switchValue(location.hash.substr(1) || 'default')
 
 	function switchValue(value){
 		scene.remove(mixerPlane.object3d)
@@ -210,12 +207,55 @@ return
 			scene.add(mixerPlane.object3d)			
 		}else if( value === 'youtube' ){
 			var url		= 'http:////www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1';
+			var url		= 'http://www.youtube.com/embed/e2w8z6mI47U?playsinline=1&rel=0&showinfo=0';
 			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
 			scene.add(mixerPlane.object3d)			
+		}else if( value === 'pdf' ){
+			var url		= 'https://bitcoin.org/bitcoin.pdf';
+			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url)
+			scene.add(mixerPlane.object3d)			
+		}else if( value === 'video' ){
+			var url	= 'videos/sintel.ogv'
+			// var url	= 'videos/sintel.mp4'
+			var url		= 'http://daqri-staging-1.s3.amazonaws.com/uploads/asset/file/336/6110IxIi8TKx.processed.m4v'
+			// var url		= 'http://daqri-staging-1.s3.amazonaws.com/uploads/asset/file/4204/PennySaver.processed.m4v'
+
+			var domElement	= document.createElement('video')
+			domElement.src	= url
+			domElement.controls	= true;
+			domElement.addEventListener('loadedmetadata', function(){
+				var width	= domElement.videoWidth
+				var height	= domElement.videoHeight
+				mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement, {
+					elementW	: width,
+					planeW		: 1,
+					planeH		: height/width,
+				})
+				scene.add(mixerPlane.object3d)	
+			})
+		}else if( value === 'jwplayer' ){
+			var domElement	= document.createElement('div')
+			domElement.id	= 'myJwPlayerElement'
+			document.body.appendChild(domElement)
+			jwplayer(domElement).setup({
+				file	: "http://www.youtube.com/watch?v=8CjdLYBDUqw",
+				width	: 640,
+				height	: 360,
+			})
+			jwplayer().onReady(function(){
+				var domElement	= document.body.querySelector('#myJwPlayerElement')
+				var boundingRect= domElement.getBoundingClientRect()
+				mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement, {
+					elementW	: boundingRect.width,
+					planeW		: 1,
+					planeH		: boundingRect.height/boundingRect.width,
+				})
+				scene.add(mixerPlane.object3d)								
+			})
 		}else if( value === 'imgur-raw' ){
 			var url		= 'http://i.imgur.com/RJQc7Qy.gif';
 			mixerPlane	= THREEx.HtmlMixer.createPlaneFromImage(mixerContext, url)
-			scene.add(mixerPlane.object3d)			
+			scene.add(mixerPlane.object3d)		
 		}else if( value === 'github-badge' ){
 			var url		= 'http://githubbadge.appspot.com/badge/jeromeetienne';
 			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {

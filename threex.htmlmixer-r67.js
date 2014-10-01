@@ -129,7 +129,6 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	//		hook event so cssObject is attached to cssScene when object3d is added/removed
 	//////////////////////////////////////////////////////////////////////////////////
 	object3d.addEventListener('added', function(event){
-		console.log('added', cssObject)
 		mixerContext.cssScene.add(cssObject)
 	})
 	object3d.addEventListener('removed', function(event){
@@ -182,18 +181,22 @@ THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
 	domElement.src	= url
 	domElement.style.border	= 'none'
 
-var onIos	= navigator.platform.match(/iP(hone|od|ad)/) !== null ? true : false
-if( onIos ){
-	// ios workaround 
-	// - see http://dev.magnolia-cms.com/blog/2012/05/strategies-for-the-iframe-on-the-ipad-problem/
-	// - and the demo 
-	domElement.style.width	= '100%'
-	domElement.style.height	= '100%'
-	var container	= document.createElement('div')
-	container.appendChild(domElement)
-	container.style.overflow	= 'scroll'
-	return new THREEx.HtmlMixer.Plane(mixerContext, container, opts)	
-}
+	//////////////////////////////////////////////////////////////////////////////////
+	//		IOS workaround for iframe
+	//////////////////////////////////////////////////////////////////////////////////
+	var onIos	= navigator.platform.match(/iP(hone|od|ad)/) !== null ? true : false
+// onIos	= true
+	if( onIos ){
+		// - see the following post for explaination on this workaround
+		// - http://dev.magnolia-cms.com/blog/2012/05/strategies-for-the-iframe-on-the-ipad-problem/
+		domElement.style.width	= '100%'
+		domElement.style.height	= '100%'
+		var container	= document.createElement('div')
+		container.appendChild(domElement)
+		container.style.overflow	= 'scroll'
+		// container.style.webkitOverflowScrolling	= 'touch'
+		return new THREEx.HtmlMixer.Plane(mixerContext, container, opts)	
+	}
 
 	// create the THREEx.HtmlMixerPlane for that
 	return new THREEx.HtmlMixer.Plane(mixerContext, domElement, opts)
