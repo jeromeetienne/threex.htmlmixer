@@ -8,8 +8,8 @@ Show Don't Tell
 * [examples/basic.html](http://jeromeetienne.github.io/threex.htmlmixer/examples/basic.html)
 \[[view source](https://github.com/jeromeetienne/threex.htmlmixer/blob/master/examples/basic.html)\] :
 It shows a very basic usage.
-* [examples/select.html](http://jeromeetienne.github.io/threex.htmlmixer/examples/basic.html)
-\[[view source](https://github.com/jeromeetienne/threex.htmlmixer/blob/master/examples/basic.html)\] :
+* [examples/demo.html](http://jeromeetienne.github.io/threex.htmlmixer/examples/demo.html)
+\[[view source](https://github.com/jeromeetienne/threex.htmlmixer/blob/master/examples/demo.html)\] :
 It shows a various possible 3rd party widget iframe available on the web.
 
 A Screenshot

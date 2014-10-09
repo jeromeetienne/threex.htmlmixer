@@ -1,3 +1,10 @@
+/**
+ * Special wrapper to handle multiple THREEx.HtmlMixer.Context for a single WebglRenderer
+ * * especially useful when the webglrenderer is doing scissor/viewport like multiviewport editors
+ */
+
+
+
 var THREEx = THREEx || {}
 
 
