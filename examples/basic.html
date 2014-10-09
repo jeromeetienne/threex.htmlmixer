@@ -3,7 +3,9 @@
 <script src='vendor/three.js/examples/js/renderers/CSS3DRenderer.js'></script>
 <script src='../threex.htmlmixer.js'></script>
 <body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'><script>
-	var renderer	= new THREE.WebGLRenderer();
+	var renderer	= new THREE.WebGLRenderer({
+		alpha	: true
+	});
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
@@ -16,8 +18,39 @@
 	//		create THREEx.HtmlMixer						//
 	//////////////////////////////////////////////////////////////////////////////////
 	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
-	
 
+	// handle window resize for mixerContext
+	window.addEventListener('resize', function(){
+		mixerContext.rendererCss.setSize( window.innerWidth, window.innerHeight )
+	}, false)
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		mixerContext configuration and dom attachement
+	//////////////////////////////////////////////////////////////////////////////////
+
+ 	// set up rendererCss
+	var rendererCss		= mixerContext.rendererCss
+	rendererCss.setSize( window.innerWidth, window.innerHeight )
+	// set up rendererWebgl
+	var rendererWebgl	= mixerContext.rendererWebgl
+
+
+	var css3dElement		= rendererCss.domElement
+	css3dElement.style.position	= 'absolute'
+	css3dElement.style.top		= '0px'
+	css3dElement.style.width	= '100%'
+	css3dElement.style.height	= '100%'
+	document.body.appendChild( css3dElement )
+	
+	var webglCanvas			= rendererWebgl.domElement
+	webglCanvas.style.position	= 'absolute'
+	webglCanvas.style.top		= '0px'
+	webglCanvas.style.width		= '100%'
+	webglCanvas.style.height	= '100%'
+	webglCanvas.style.pointerEvents	= 'none'
+	css3dElement.appendChild( webglCanvas )
+	
 	//////////////////////////////////////////////////////////////////////////////////
 	//		create a Plane for THREEx.HtmlMixer				//
 	//////////////////////////////////////////////////////////////////////////////////
@@ -76,37 +109,33 @@
 	})
 
 	//////////////////////////////////////////////////////////////////////////////////
-	//		update mixerContext
-	//////////////////////////////////////////////////////////////////////////////////
-	updateFcts.push(function(delta, now){
-		// NOTE: it must be after camera mode
-		mixerContext.update(delta, now)
-	})
-
-
-	//////////////////////////////////////////////////////////////////////////////////
-	//		render the scene						//
-	//////////////////////////////////////////////////////////////////////////////////
-	updateFcts.push(function(){
-		renderer.render( scene, camera );		
-	})
-
-	//////////////////////////////////////////////////////////////////////////////////
 	//		handle resize							//
 	//////////////////////////////////////////////////////////////////////////////////
 
 	function onResize(){
 		// notify the renderer of the size change
 		renderer.setSize( window.innerWidth, window.innerHeight )
-		mixerContext.rendererCSS.setSize( window.innerWidth, window.innerHeight )
 		// update the camera
 		camera.aspect	= window.innerWidth / window.innerHeight
 		camera.updateProjectionMatrix()		
 	}
 	
 	window.addEventListener('resize', onResize, false)
-	window.addEventListener('load', onResize, false)
-	setTimeout(onResize, 100)
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		render the scene						//
+	//////////////////////////////////////////////////////////////////////////////////
+	// render the css3d
+	updateFcts.push(function(delta, now){
+		// NOTE: it must be after camera mode
+		mixerContext.update(delta, now)
+	})
+	// render the webgl
+	updateFcts.push(function(){
+		renderer.render( scene, camera );		
+	})
+
+
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		loop runner							//

@@ -49,10 +49,8 @@ THREEx.HtmlMixer.Context	= function(frontRenderer, scene, camera){
 	var cssFactor	= 100
 	this.cssFactor	= cssFactor
 	var cssCamera	= new THREE.PerspectiveCamera(camera.fov, camera.aspect, camera.near*cssFactor, camera.far*cssFactor);
-
+	cssCamera.quaternion	= camera.quaternion
 	updateFcts.push(function(delta, now){
-		cssCamera.quaternion.copy(camera.quaternion)
-
 		cssCamera.position
 			.copy(camera.position)
 			.multiplyScalar(cssFactor)
@@ -79,7 +77,7 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	opts		= opts	|| {}
 	opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 1024
 	opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 1
-	opts.planeH	= opts.planeH !== undefined	? opts.planeH	: opts.planeW / (4/3)
+	opts.planeH	= opts.planeH !== undefined	? opts.planeH	: 3/4
 
 	// update functions
 	var updateFcts	= []
@@ -95,7 +93,7 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 		opacity	: 0,
 		color	: new THREE.Color('black'),
 		blending: THREE.NoBlending,
-		side	: THREE.DoubleSide,
+		side	: THREE.DoubleSide
 	})
 	var geometry	= new THREE.PlaneGeometry( opts.planeW, opts.planeH )
 	var object3d	= new THREE.Mesh( geometry, planeMaterial )
@@ -111,13 +109,12 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 	// create a CSS3DObject to display element
 	var cssObject		= new THREE.CSS3DObject( domElement )
 	this.cssObject		= cssObject
+	// synchronize cssObject position/rotation with planeMesh position/rotation 
+	cssObject.quaternion	= object3d.quaternion
 
 	cssObject.scale.set(1,1,1)
 		.multiplyScalar(mixerContext.cssFactor/(elementWidth/planeW))
 
-	//////////////////////////////////////////////////////////////////////////////////
-	//		hook event so cssObject is attached to cssScene when object3d is added/removed
-	//////////////////////////////////////////////////////////////////////////////////
 	object3d.addEventListener('added', function(event){
 		mixerContext.cssScene.add(cssObject)
 	})
@@ -125,31 +122,21 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 		mixerContext.cssScene.remove(cssObject)
 	})
 
-	//////////////////////////////////////////////////////////////////////////////////
-	//		Comment								//
-	//////////////////////////////////////////////////////////////////////////////////
-
-	updateFcts.push(function(){
+	updateFcts.push(function(delta, now){
 		// get world position
 		object3d.updateMatrixWorld();
 		var worldMatrix	= object3d.matrixWorld;
-
-		// get position/quaternion/scale of object3d
-		var position	= new THREE.Vector3()
-		var scale	= new THREE.Vector3()
-		var quaternion	= new THREE.Quaternion()
-		worldMatrix.decompose(position, quaternion, scale)
-
-		// handle quaternion
-		cssObject.quaternion.copy(quaternion)
-
+		
 		// handle position
+		var position	= new THREE.Vector3().getPositionFromMatrix(worldMatrix);
 		cssObject.position
 			.copy(position)
 			.multiplyScalar(mixerContext.cssFactor)
+
 		// handle scale
-		var scaleFactor	= elementWidth/(geometry.parameters.width*scale.x)
-		cssObject.scale.set(1,1,1).multiplyScalar(mixerContext.cssFactor/scaleFactor)
+		var objectScale	= new THREE.Vector3().getScaleFromMatrix(worldMatrix)
+		var scale	= elementWidth/(geometry.width*objectScale.x)
+		cssObject.scale.set(1,1,1).multiplyScalar(mixerContext.cssFactor/scale)
 	})
 };
 
@@ -170,19 +157,6 @@ THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
 	var domElement	= document.createElement('iframe')
 	domElement.src	= url
 	domElement.style.border	= 'none'
-
-if( true ){
-	// ios workaround 
-	// - see http://dev.magnolia-cms.com/blog/2012/05/strategies-for-the-iframe-on-the-ipad-problem/
-	// - and the demo 
-	domElement.style.width	= '100%'
-	domElement.style.height	= '100%'
-	var container	= document.createElement('div')
-	container.appendChild(domElement)
-	container.style.overflow	= 'scroll'
-	return new THREEx.HtmlMixer.Plane(mixerContext, container, opts)	
-}
-
 	// create the THREEx.HtmlMixerPlane for that
 	return new THREEx.HtmlMixer.Plane(mixerContext, domElement, opts)
 }

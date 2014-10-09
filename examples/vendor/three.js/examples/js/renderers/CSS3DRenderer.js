@@ -9,10 +9,6 @@ THREE.CSS3DObject = function ( element ) {
 
 	this.element = element;
 	this.element.style.position = 'absolute';
-	this.element.style.WebkitTransformStyle = 'preserve-3d';
-	this.element.style.MozTransformStyle = 'preserve-3d';
-	this.element.style.oTransformStyle = 'preserve-3d';
-	this.element.style.transformStyle = 'preserve-3d';
 
 	this.addEventListener( 'removed', function ( event ) {
 
@@ -57,16 +53,9 @@ THREE.CSS3DRenderer = function () {
 	domElement.style.overflow = 'hidden';
 
 	domElement.style.WebkitTransformStyle = 'preserve-3d';
-	domElement.style.WebkitPerspectiveOrigin = '50% 50%';
-
 	domElement.style.MozTransformStyle = 'preserve-3d';
-	domElement.style.MozPerspectiveOrigin = '50% 50%';
-
 	domElement.style.oTransformStyle = 'preserve-3d';
-	domElement.style.oPerspectiveOrigin = '50% 50%';
-
 	domElement.style.transformStyle = 'preserve-3d';
-	domElement.style.perspectiveOrigin = '50% 50%';
 
 	this.domElement = domElement;
 
@@ -79,7 +68,9 @@ THREE.CSS3DRenderer = function () {
 
 	domElement.appendChild( cameraElement );
 
-	this.cameraElement = cameraElement;
+	this.setClearColor = function () {
+
+	};
 
 	this.setSize = function ( width, height ) {
 
