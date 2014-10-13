@@ -176,15 +176,12 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 //		Some Helpers							//
 //////////////////////////////////////////////////////////////////////////////////
 
-
 /**
- * create a THREEx.HtmlmixedPlane for an iframe
+ * create domElement for a iframe to insert in a THREEx.HtmlmixedPlane 
  * 
  * @param  {String} url  the url for the iframe
- * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
- * @return {THREEx.HtmlMixerPlane}      the object just created
  */
-THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
+THREEx.HtmlMixer.createDomElementForIframe	= function(url){
 	// create the iframe element
 	var domElement	= document.createElement('iframe')
 	domElement.src	= url
@@ -194,7 +191,6 @@ THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
 	//		IOS workaround for iframe
 	//////////////////////////////////////////////////////////////////////////////////
 	var onIos	= navigator.platform.match(/iP(hone|od|ad)/) !== null ? true : false
-// onIos	= true
 	if( onIos ){
 		// - see the following post for explaination on this workaround
 		// - http://dev.magnolia-cms.com/blog/2012/05/strategies-for-the-iframe-on-the-ipad-problem/
@@ -204,9 +200,35 @@ THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
 		container.appendChild(domElement)
 		container.style.overflow	= 'scroll'
 		// container.style.webkitOverflowScrolling	= 'touch'
-		return new THREEx.HtmlMixer.Plane(mixerContext, container, opts)	
+		return container
 	}
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Comment								//
+	//////////////////////////////////////////////////////////////////////////////////
+	return domElement
+}
 
+/**
+ * create domElement for a image to insert in a THREEx.HtmlmixedPlane 
+ * 
+ * @param  {String} url  the url for the iframe
+ */
+THREEx.HtmlMixer.createDomElementForImage	= function(url){
+	var domElement	= document.createElement('img')
+	domElement.src	= url
+	return domElement
+}
+
+/**
+ * create a THREEx.HtmlmixedPlane for an iframe
+ * 
+ * @param  {String} url  the url for the iframe
+ * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
+ * @return {THREEx.HtmlMixerPlane}      the object just created
+ */
+THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
+	// create the domElement
+	var domElement	= THREEx.HtmlMixer.createDomElementForIframe(url)
 	// create the THREEx.HtmlMixerPlane for that
 	return new THREEx.HtmlMixer.Plane(mixerContext, domElement, opts)
 }
@@ -219,9 +241,8 @@ THREEx.HtmlMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
  * @return {THREEx.HtmlMixerPlane}      the object just created
  */
 THREEx.HtmlMixer.createPlaneFromImage	= function(mixerContext, url, opts){
-	// create the iframe element
-	var domElement	= document.createElement('img')
-	domElement.src	= url
+	// create the domElement
+	var domElement	= THREEx.HtmlMixer.createDomElementForImage(url)
 	// create the THREEx.HtmlMixerPlane for that
 	return new THREEx.HtmlMixer.Plane(mixerContext, domElement, opts)
 }

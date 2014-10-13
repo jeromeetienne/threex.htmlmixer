@@ -4,8 +4,9 @@
 <script src='../threex.htmlmixer.js'></script>
 <body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'><script>
 	var renderer	= new THREE.WebGLRenderer({
-		alpha	: true
+		alpha		: true,
 	});
+	renderer.autoClear	= false;
 	renderer.setSize( window.innerWidth, window.innerHeight );
 	document.body.appendChild( renderer.domElement );
 
