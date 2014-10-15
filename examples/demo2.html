@@ -5,12 +5,12 @@
 <script src='vendor/three.js/build/three.js'></script>
 <script src='vendor/three.js/examples/js/renderers/CSS3DRenderer.js'></script>
 <script src='vendor/three.js/examples/js/controls/OrbitControls.js'></script>
-<script src='../threex.htmlmixer.js'></script>
+<script src='../threex.htmlmixer2.js'></script>
 
 <!-- for jwplayer only  -->
 <script src="http://jwpsrv.com/library/Dr2UtkbpEeSbHiIAC0WXxA.js"></script>
 
-<body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
+<body style='margin: 0px; background-color: blue; overflow: hidden;'>
 <div style='position:absolute; z-index: 10;'>
 	<button onclick='switchValue(this.textContent);'>default</button><br/>
 	<button onclick='switchValue(this.textContent);'>threex</button><br/>
@@ -19,10 +19,10 @@
 	<button onclick='switchValue(this.textContent);'>youtube</button><br/>
 	 <!-- (may be flash depending on <a href='http://youtube.com/html5'>options</a>)<br/> -->
 	<button onclick='switchValue(this.textContent);'>video</button><br/>
+	<button onclick='switchValue(this.textContent);'>videoOgv</button><br/>
 	<button onclick='switchValue(this.textContent);'>pdf</button><br/>
 	<button onclick='switchValue(this.textContent);'>jwplayer</button><br/>
 	<button onclick='switchValue(this.textContent);'>imgur-raw</button><br/>
-	<button onclick='switchValue(this.textContent);'>testTexture</button><br/>
 	<button onclick='switchValue(this.textContent);'>github-badge</button><br/>
 	<button onclick='switchValue(this.textContent);'>dailymotion</button><br/>
 	<button onclick='switchValue(this.textContent);'>instagram</button><br/>
@@ -54,15 +54,16 @@
 	var geometry	= new THREE.TorusKnotGeometry(0.25-0.06, 0.06);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.set(+0.7,0,+0.5)
+	mesh.position.set(+0.6,0,+0.5)
 	mesh.scale.multiplyScalar(1.5)
 	scene.add( mesh );
 	
 	var geometry	= new THREE.TorusKnotGeometry(0.25-0.06, 0.06);
 	var material	= new THREE.MeshNormalMaterial();
 	var mesh	= new THREE.Mesh( geometry, material );
-	mesh.position.set(-0.5,0,-0.5)
-	mesh.scale.multiplyScalar(1.5)
+	mesh.position.set(-0.3,0,-0.5)
+	mesh.scale.multiplyScalar(3)
+	mesh.scale.x	*= 2
 	scene.add( mesh );
 
 
@@ -106,6 +107,8 @@
 	//		create a Plane for THREEx.HtmlMixer				//
 	//////////////////////////////////////////////////////////////////////////////////
 	
+
+
 	// var url		= 'http://threejs.org';
 	// var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
 
@@ -119,49 +122,92 @@
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	scene.add( mixerPlane.object3d )
 
-	// onRenderFcts.push(function(){
-	// 	var object3d	= mixerPlane.object3d
-	// 	object3d.rotation.y	+= 0.01
-	// })
+	onRenderFcts.push(function(){
+		var object3d	= mixerPlane.object3d
+		object3d.rotation.y	+= 0.01
+	})
+
+	function setUrlLearningThreejs(){
+		var url		= 'http://learningthreejs.com';
+		var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+		mixerPlane.setDomElement(domElement)
+	}
+	function setUrlThreex(){
+		var url		= 'http://jeromeetienne.github.io/threex/'
+		var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+		mixerPlane.setDomElement(domElement)
+	}
+	function setUrlGif(){
+		var url		= 'http://i.imgur.com/RJQc7Qy.gif';
+		var domElement	= THREEx.HtmlMixer.createImageDomElement(url)
+		mixerPlane.setDomElement(domElement)
+	}
+
+	function setUrlVimeo(){
+		var url		= 'http://player.vimeo.com/video/14641555?portrait=0&color=333';
+		var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+		mixerPlane.setDomElement(domElement)
+	}
+
+
+	function createDomElementForUrl(mixerPlane, url){
+
+		var isImage	= (/\.(gif|jpg|jpeg|tiff|png)$/i).test(url)
+		if( isImage === true ){
+			var domElement	= THREEx.HtmlMixer.createImageDomElement(url)	
+			mixerPlane.setDomElement(domElement)
+			return
+		}
+
+		var isVideo	= (/\.(ogv|mp4)$/i).test(url)
+		if( isVideo === true ){
+	console.log('VIDEO')
+			var domElement	= document.createElement('video')
+			domElement.src	= url
+			domElement.controls	= true;
+			domElement.addEventListener('loadedmetadata', function(){
+				var width	= domElement.videoWidth
+				var height	= domElement.videoHeight
+
+				mixerPlane.setDomElement(domElement)
+				mixerPlane.setElementSize(width, height)
+			})
+			return
+		}
+
+		// if you reach here, create an iframe
+		var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+		mixerPlane.setDomElement(domElement)
+	}
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Comment								//
 	//////////////////////////////////////////////////////////////////////////////////
-	switchValue(location.hash.substr(1) || 'default')
+	// switchValue(location.hash.substr(1) || 'default')
 	function switchValue(value){
-		scene.remove(mixerPlane.object3d)
+		// scene.remove(mixerPlane.object3d)
 		if( value === 'default' ){
 			var url		= 'http://learningthreejs.com';
-			// var url		= 'http:////www.youtube.com/embed/Y4fIPY31sDo'
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)
+			createDomElementForUrl(mixerPlane, url)
 		}else if( value === 'threex' ){
 			var url		= 'http://jeromeetienne.github.io/threex/';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)
+			createDomElementForUrl(mixerPlane, url)
 		}else if( value === 'three.js' ){
 			var url		= 'http://threejs.org/';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)			
+			createDomElementForUrl(mixerPlane, url)
 		}else if( value === 'vimeo' ){
 			var url		= 'http://player.vimeo.com/video/14641555?portrait=0&color=333';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)			
+			createDomElementForUrl(mixerPlane, url)
 		}else if( value === 'youtube' ){
 			var url		= 'http:////www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1';
 			var url		= 'http://www.youtube.com/embed/e2w8z6mI47U?playsinline=1&rel=0&showinfo=0';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)
+			createDomElementForUrl(mixerPlane, url)
 		}else if( value === 'pdf' ){
 			var url		= 'https://bitcoin.org/bitcoin.pdf';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)			
+			createDomElementForUrl(mixerPlane, url)
+		}else if( value === 'videoOgv' ){
+			var url	= 'videos/sintel.ogv'
+			createDomElementForUrl(mixerPlane, url)
 		}else if( value === 'video' ){
 			var url	= 'videos/sintel.ogv'
 
@@ -199,49 +245,40 @@
 			})
 		}else if( value === 'imgur-raw' ){
 			var url		= 'http://i.imgur.com/RJQc7Qy.gif';
-			var domElement	= THREEx.HtmlMixer.createImageDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)	
-		}else if( value === 'testTexture' ){
-			var url		= 'images/UV_Grid_Sm.jpg';
-			var domElement	= THREEx.HtmlMixer.createImageDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)		
+			createDomElementForUrl(url, function(domElement){
+				mixerPlane.setDomElement(domElement)
+			})
 		}else if( value === 'github-badge' ){
 			var url		= 'http://githubbadge.appspot.com/badge/jeromeetienne';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement, {
+			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {
 				elementW	: 200,
 				planeH		: 108/200
 			})
 			scene.add(mixerPlane.object3d)			
 		}else if( value === 'dailymotion' ){
 			var url		= 'http://www.dailymotion.com/embed/video/x12pd0r_betisier-ce-qui-se-passe-entre-les-prises_fun?html=1';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)
+			createDomElementForUrl(url, function(domElement){
+				mixerPlane.setDomElement(domElement)
+			})
 		}else if( value === 'ted' ){
 			var url		= 'http://embed.ted.com/talks/derek_paravicini_and_adam_ockelford_in_the_key_of_genius.html';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)
+			createDomElementForUrl(url, function(domElement){
+				mixerPlane.setDomElement(domElement)
+			})
 		}else if( value === 'blip' ){
 			var url		= 'http://blip.tv/play/AYOT%2BBUC.x?p=1';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)
+			createDomElementForUrl(url, function(domElement){
+				mixerPlane.setDomElement(domElement)
+			})
 		}else if( value === 'instagram' ){
 			var url		= 'http://instagram.com/p/b7dRvqnUxT/embed/';
-			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement, {
-				elementW	: 512
+			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {	elementW	: 512
 			})
 			scene.add(mixerPlane.object3d)
 		}else if( value === 'twitter' ){
 			var url		= 'twitteriframe.html';
 			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement, {
-				elementW	: 512
+			mixerPlane	= THREEx.HtmlMixer.createPlaneFromIframe(mixerContext, url, {	elementW	: 512
 			})
 			scene.add(mixerPlane.object3d)
 		}else	console.assert(false)

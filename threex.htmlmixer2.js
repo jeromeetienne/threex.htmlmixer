@@ -103,6 +103,7 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 
 	var planeW	= opts.planeW
 	var planeH	= opts.planeH
+
 	if( opts.object3d === null ){
 		var planeMaterial   = new THREE.MeshBasicMaterial({
 			opacity	: 0,
@@ -110,7 +111,7 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 			blending: THREE.NoBlending,
 			side	: THREE.DoubleSide,
 		})
-		var geometry	= new THREE.PlaneGeometry( opts.planeW, opts.planeH )
+		var geometry	= new THREE.PlaneGeometry( planeW, planeH )
 		var object3d	= new THREE.Mesh( geometry, planeMaterial )		
 	}else{
 		var object3d	= opts.object3d
@@ -120,9 +121,21 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 
 
 	// width of iframe in pixels
-	var aspectRatio		= planeH / planeW
-	var elementWidth	= opts.elementW;
-	var elementHeight	= elementWidth * aspectRatio
+	var elementWidth	= 0
+	var elementHeight	= 0
+
+	// ;(function(){
+	// 	elementWidth	= opts.elementW;
+	// 	elementHeight	= elementWidth * aspectRatio
+	// })()
+
+	this.setElementSize	= function(newWidth, newHeight){
+		elementWidth	= newWidth;
+		elementHeight	= newHeight		
+		syncDomElementSize()
+	}
+
+	this.setElementSize(opts.elementW, opts.elementW * planeH / planeW)
 
 	this.setDomElement	= function(newDomElement){
 		console.log('setDomElement: newDomElement', newDomElement)
@@ -136,13 +149,13 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 		// update cssObject
 		cssObject.element	= domElement
 		// reset the size of the domElement
-		setDomElementSize()
+		syncDomElementSize()
 	}
-	function setDomElementSize(){
+	function syncDomElementSize(){
 		domElement.style.width	= elementWidth  + "px";
 		domElement.style.height	= elementHeight + "px";
 	}
-	setDomElementSize()
+	syncDomElementSize()
 
 	// create a CSS3DObject to display element
 	var cssObject		= new THREE.CSS3DObject( domElement )
