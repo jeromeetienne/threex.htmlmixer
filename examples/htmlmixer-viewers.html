@@ -106,7 +106,7 @@
 		mixerPlane.domElement.src	= newUrl
 	}
 
-	
+
 
 	function convertToViewerUrl(url){
 		//////////////////////////////////////////////////////////////////////////////////
@@ -126,7 +126,7 @@
 		//////////////////////////////////////////////////////////////////////////////////
 		var isYoutubeWatch	= /^https?:\/\/www.youtube.com\/watch/.test(url)
 		if( isYoutubeWatch === true ){
-			url	= 'viewers/jwplayer-viewer/index.html?url='+encodeURIComponent(url)
+			url	= 'htmlmixer-viewers/jwplayer-viewer/index.html?url='+encodeURIComponent(url)
 			return url
 		}
 
@@ -135,8 +135,8 @@
 		//////////////////////////////////////////////////////////////////////////////////
 		var isPdf	= /\.pdf$/.test(url)
 		if( isPdf === true ){
-			// url	= 'viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(url)
-			url	= 'viewers/pdfjs-viewer/web/viewer.html?file='+encodeURIComponent(url)
+			// url	= 'htmlmixer-viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(url)
+			url	= 'htmlmixer-viewers/pdfjs-viewer/web/viewer.html?file='+encodeURIComponent(url)
 			return url
 		}
 
