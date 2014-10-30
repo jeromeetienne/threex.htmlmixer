@@ -107,8 +107,8 @@
 	})
 
 	function switcher(url){
-		scene.remove(mixerPlane.object3d)
 		THREEx.HtmlMixer.hintedBuilderAsync(url, function(domElement, planeOpts){
+			scene.remove(mixerPlane.object3d)
 			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement, planeOpts)
 			scene.add(mixerPlane.object3d)
 		})
@@ -125,28 +125,48 @@
 		//////////////////////////////////////////////////////////////////////////////////
 		//		isYoutubeWatch
 		//////////////////////////////////////////////////////////////////////////////////
+		// var isYoutubeWatch	= /^https?:\/\/www.youtube.com\/watch/.test(url)
+		// if( isYoutubeWatch === true ){
+		// 	var domElement	= document.createElement('div')
+		// 	domElement.id	= 'myJwPlayerElement'
+		// 	document.body.appendChild(domElement)
+		// 	jwplayer(domElement).setup({
+		// 		file	: url,
+		// 		width	: 640,
+		// 		height	: 360,
+		// 	})
+		// 	jwplayer().onReady(function(){
+		// 		var domElement	= document.body.querySelector('#myJwPlayerElement')
+		// 		var boundingRect= domElement.getBoundingClientRect()
+		// 		callback(domElement, {
+		// 			elementW	: boundingRect.width,
+		// 			planeW		: 1,
+		// 			planeH		: boundingRect.height/boundingRect.width,
+		// 		})
+		// 	})
+		// 	return
+		// }
+
+
+		//////////////////////////////////////////////////////////////////////////////////
+		//		youtube/watch by embeded player
+		//////////////////////////////////////////////////////////////////////////////////
 		var isYoutubeWatch	= /^https?:\/\/www.youtube.com\/watch/.test(url)
 		if( isYoutubeWatch === true ){
-			var domElement	= document.createElement('div')
-			domElement.id	= 'myJwPlayerElement'
-			document.body.appendChild(domElement)
-			jwplayer(domElement).setup({
-				file	: url,
-				width	: 640,
-				height	: 360,
-			})
-			jwplayer().onReady(function(){
-				var domElement	= document.body.querySelector('#myJwPlayerElement')
-				var boundingRect= domElement.getBoundingClientRect()
-				callback(domElement, {
-					elementW	: boundingRect.width,
-					planeW		: 1,
-					planeH		: boundingRect.height/boundingRect.width,
-				})
-			})
-			return
+			var matches	= url.match(/v=([^#\&\?]+)/)
+			console.assert(matches.length === 2)
+			var videoId	= matches[1]
+			url		= 'http://www.youtube.com/embed/'+videoId+'?playsinline=1&rel=0&showinfo=0'
 		}
 
+		//////////////////////////////////////////////////////////////////////////////////
+		//		youtube/watch by embeded player
+		//////////////////////////////////////////////////////////////////////////////////
+		var isPdf		= /\.pdf$/.test(url)
+		if( isPdf === true ){
+			url		= 'viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(url)
+			url		= 'viewers/pdfjs-viewer/web/viewer.html?file='+encodeURIComponent(url)
+		}
 
 		//////////////////////////////////////////////////////////////////////////////////
 		//		isVideo
@@ -206,7 +226,6 @@
 			var domElement	= THREEx.HtmlMixer.createImageDomElement(url)
 		}else	console.assert(false)
 
-
 		callback(domElement, planeOpts)
 	}
 	//////////////////////////////////////////////////////////////////////////////////
@@ -218,9 +237,11 @@
 		'threex'		: 'http://jeromeetienne.github.io/threex/',
 		'three.js'		: 'http://threejs.org/',
 		'vimeo'			: 'http://player.vimeo.com/video/14641555?portrait=0&color=333',
-		'youtubeRaw'		: 'http:////www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1',
+		'youtubeRaw'		: 'http://www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1',
 		'youtubeRawIphone'	: 'http://www.youtube.com/embed/e2w8z6mI47U?playsinline=1&rel=0&showinfo=0',
-		'pdf'			: 'https://bitcoin.org/bitcoin.pdf',
+		'youtubeWatch'		: 'https://www.youtube.com/watch?v=0xiC9GNNODE',
+		// 'pdf'			: 'https://bitcoin.org/bitcoin.pdf',
+		'pdf'			: '/examples/documents/bitcoin.pdf',
 		'videoOgv'		: 'videos/sintel.ogv',
 		'videoMp4'		: 'videos/sintel.mp4',
 		'youtubeByJwplayer'	: 'http://www.youtube.com/watch?v=8CjdLYBDUqw',

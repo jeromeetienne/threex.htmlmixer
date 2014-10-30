@@ -1,0 +1,27 @@
+<!doctype html>
+<script src="http://jwpsrv.com/library/Dr2UtkbpEeSbHiIAC0WXxA.js"></script>
+<body style='margin: 0px;'><script>
+
+	// get parameters from the url query
+	function parseUrlQuery() {
+		var query	= location.search.substr(1);
+		var result	= {};
+		query.split("&").forEach(function(part) {
+			var item	= part.split("=");
+			result[item[0]] = decodeURIComponent(item[1]);
+		});
+		return result;
+	}
+	var urlQuery	= parseUrlQuery()
+	var url 	= urlQuery['url']
+	url		= url	|| "http://www.youtube.com/watch?v=8CjdLYBDUqw"
+
+	var domElement	= document.createElement('div')
+	domElement.id	= 'myJwPlayerElement'
+	document.body.appendChild(domElement)
+	jwplayer(domElement).setup({
+		file	: url,
+		width	: window.innerWidth,
+		height	: window.innerHeight,
+	})
+</script></body>

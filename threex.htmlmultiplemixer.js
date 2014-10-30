@@ -58,36 +58,3 @@ THREEx.HtmlMultipleMixer.Plane = function(multipleMixerContext, domElement, opts
 
 
 
-//////////////////////////////////////////////////////////////////////////////////
-//		Some Helpers							//
-//////////////////////////////////////////////////////////////////////////////////
-
-
-/**
- * create a THREEx.HtmlmixedPlane for an iframe
- * 
- * @param  {String} url  the url for the iframe
- * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
- * @return {THREEx.HtmlMixerPlane}      the object just created
- */
-THREEx.HtmlMultipleMixer.createPlaneFromIframe	= function(mixerContext, url, opts){
-	// create the domElement
-	var domElement	= THREEx.HtmlMixer.createDomElementForIframe(url)
-	// create the THREEx.HtmlMixerPlane for that
-	return new THREEx.HtmlMultipleMixer.Plane(mixerContext, domElement, opts)
-}
-
-/**
- * create a THREEx.HtmlmixedPlane for an iframe
- * 
- * @param  {String} url  the url for the iframe
- * @param  {Object} opts the options for THREEx.HtmlMixerPlane constructor
- * @return {THREEx.HtmlMixerPlane}      the object just created
- */
-THREEx.HtmlMultipleMixer.createPlaneFromImage	= function(mixerContext, url, opts){
-	// create the domElement
-	var domElement	= THREEx.HtmlMixer.createDomElementForImage(url)
-	// create the THREEx.HtmlMixerPlane for that
-	return new THREEx.HtmlMultipleMixer.Plane(mixerContext, domElement, opts)
-}
-

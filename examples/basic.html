@@ -42,6 +42,7 @@
 	css3dElement.style.top		= '0px'
 	css3dElement.style.width	= '100%'
 	css3dElement.style.height	= '100%'
+	css3dElement.style.zIndex	= -2
 	document.body.appendChild( css3dElement )
 	
 	var webglCanvas			= rendererWebgl.domElement
@@ -58,17 +59,18 @@
 	
 
 	// create the iframe element
-	var domElement	= document.createElement('iframe')
-	// domElement.src	= 'http://jeromeetienne.github.io/threex/';
-	domElement.src	= 'http://threejs.org/';
-	domElement.style.border	= 'none'
+	var url		= 'http://threejs.org/';
+	var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+
+	// var documentUrl	= '../../documents/bitcoin.pdf'
+	// var url		= 'viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(documentUrl)
+	// var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	mixerPlane.object3d.scale.multiplyScalar(2)
 	scene.add(mixerPlane.object3d)
-	updateFcts.push(function(delta, now){
-		mixerPlane.update(delta, now)
-	})
+
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Make it move							//

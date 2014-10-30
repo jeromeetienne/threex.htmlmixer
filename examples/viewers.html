@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<!-- for ios and maybe other mobiles -->
+<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+
+<script src='vendor/three.js/build/three.js'></script>
+<script src='vendor/three.js/examples/js/renderers/CSS3DRenderer.js'></script>
+<script src='vendor/three.js/examples/js/controls/OrbitControls.js'></script>
+<script src='../threex.htmlmixer.js'></script>
+
+<!-- for jwplayer only  -->
+<script src="http://jwpsrv.com/library/Dr2UtkbpEeSbHiIAC0WXxA.js"></script>
+
+<body style='margin: 0px; background-color: #bbbbbb; overflow: hidden;'>
+<div style='position:absolute; z-index: 10;' id='selectButtons'></div>
+<script>
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Comment								//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var renderer	= new THREE.WebGLRenderer({
+		alpha	: true
+	});
+	renderer.setClearColor(new THREE.Color('black'), 0)
+	renderer.setSize( window.innerWidth, window.innerHeight );
+	document.body.appendChild( renderer.domElement );
+
+	var onRenderFcts	= [];
+	var scene	= new THREE.Scene();
+	var camera	= new THREE.PerspectiveCamera(70, window.innerWidth / window.innerHeight, 0.01, 1000 );
+	camera.position.z = 1
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	//		add objects in the scene					//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var geometry	= new THREE.TorusKnotGeometry(0.25-0.06, 0.06);
+	var material	= new THREE.MeshNormalMaterial();
+	var mesh	= new THREE.Mesh( geometry, material );
+	mesh.position.set(+0.7,0,+0.5)
+	mesh.scale.multiplyScalar(1.5)
+	scene.add( mesh );
+	
+	var geometry	= new THREE.TorusKnotGeometry(0.25-0.06, 0.06);
+	var material	= new THREE.MeshNormalMaterial();
+	var mesh	= new THREE.Mesh( geometry, material );
+	mesh.position.set(-0.5,0,-0.5)
+	mesh.scale.multiplyScalar(1.5)
+	scene.add( mesh );
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		create THREEx.HtmlMixer						//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var mixerContext= new THREEx.HtmlMixer.Context(renderer, scene, camera)
+	mixerContext.rendererCss.setSize( window.innerWidth, window.innerHeight )
+
+	// handle window resize for mixerContext
+	window.addEventListener('resize', function(){
+		var rendererCss		= mixerContext.rendererCss
+		rendererCss.setSize( window.innerWidth, window.innerHeight )
+	}, false)
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		mixerContext configuration and dom attachement
+	//////////////////////////////////////////////////////////////////////////////////
+
+ 	// set up rendererCss
+	var rendererCss		= mixerContext.rendererCss
+	// set up rendererWebgl
+	var rendererWebgl	= mixerContext.rendererWebgl
+
+	var css3dElement		= rendererCss.domElement
+	css3dElement.style.position	= 'absolute'
+	css3dElement.style.top		= '0px'
+	css3dElement.style.width	= '100%'
+	css3dElement.style.height	= '100%'
+	document.body.appendChild( css3dElement )
+	
+	var webglCanvas			= rendererWebgl.domElement
+	webglCanvas.style.position	= 'absolute'
+	webglCanvas.style.top		= '0px'
+	webglCanvas.style.width		= '100%'
+	webglCanvas.style.height	= '100%'
+	webglCanvas.style.pointerEvents	= 'none'
+	css3dElement.appendChild( webglCanvas )
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	//		create a Plane for THREEx.HtmlMixer				//
+	//////////////////////////////////////////////////////////////////////////////////
+	
+	var url		= 'http://threejs.org';
+	var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+	console.log('domElement', domElement)
+
+	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
+	scene.add( mixerPlane.object3d )
+
+	onRenderFcts.push(function(){
+		var object3d	= mixerPlane.object3d
+		object3d.rotation.y	+= 0.01
+	})
+
+	function switcher(url){
+		var newUrl	= convertToViewerUrl(url)
+		mixerPlane.domElement.src	= newUrl
+	}
+
+	
+
+	function convertToViewerUrl(url){
+		//////////////////////////////////////////////////////////////////////////////////
+		//		youtube/watch by embeded player
+		//////////////////////////////////////////////////////////////////////////////////
+		// var isYoutubeWatch	= /^https?:\/\/www.youtube.com\/watch/.test(url)
+		// if( isYoutubeWatch === true ){
+		// 	var matches	= url.match(/v=([^#\&\?]+)/)
+		// 	console.assert(matches.length === 2)
+		// 	var videoId	= matches[1]
+		// 	url		= 'http://www.youtube.com/embed/'+videoId+'?playsinline=1&rel=0&showinfo=0'
+		// 	return url
+		// }
+
+		//////////////////////////////////////////////////////////////////////////////////
+		//		youtube/watch by embeded player
+		//////////////////////////////////////////////////////////////////////////////////
+		var isYoutubeWatch	= /^https?:\/\/www.youtube.com\/watch/.test(url)
+		if( isYoutubeWatch === true ){
+			url	= 'viewers/jwplayer-viewer/index.html?url='+encodeURIComponent(url)
+			return url
+		}
+
+		//////////////////////////////////////////////////////////////////////////////////
+		//		for pdf, use pdf.js
+		//////////////////////////////////////////////////////////////////////////////////
+		var isPdf	= /\.pdf$/.test(url)
+		if( isPdf === true ){
+			// url	= 'viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(url)
+			url	= 'viewers/pdfjs-viewer/web/viewer.html?file='+encodeURIComponent(url)
+			return url
+		}
+
+		// if this point is reached, do nothing
+		return url
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Comment								//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	var urls	= {
+		'default'		: 'http://learningthreejs.com',
+		'threex'		: 'http://jeromeetienne.github.io/threex/',
+		'three.js'		: 'http://threejs.org/',
+		'vimeo'			: 'http://player.vimeo.com/video/14641555?portrait=0&color=333',
+		'youtubeRaw'		: 'http://www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1',
+		'youtubeRawIphone'	: 'http://www.youtube.com/embed/e2w8z6mI47U?playsinline=1&rel=0&showinfo=0',
+		'youtubeWatch'		: 'https://www.youtube.com/watch?v=0xiC9GNNODE',
+		// 'pdf'			: 'https://bitcoin.org/bitcoin.pdf',
+		'pdf'			: '/examples/documents/bitcoin.pdf',
+		'videoOgv'		: '/examples/videos/sintel.ogv',
+		'videoMp4'		: '/examples/videos/sintel.mp4',
+		'youtubeByJwplayer'	: 'http://www.youtube.com/watch?v=8CjdLYBDUqw',
+		'imgur-raw'		: 'http://i.imgur.com/RJQc7Qy.gif',
+		'testTexture'		: '/examples/images/UV_Grid_Sm.jpg',
+		'github-badge'		: 'http://githubbadge.appspot.com/badge/jeromeetienne',
+		'dailymotion'		: 'http://www.dailymotion.com/embed/video/x12pd0r_betisier-ce-qui-se-passe-entre-les-prises_fun?html=1',
+		'ted'			: 'http://embed.ted.com/talks/derek_paravicini_and_adam_ockelford_in_the_key_of_genius.html',
+		'blip'			: 'http://blip.tv/play/AYOT%2BBUC.x?p=1',
+		'instagram'		: 'http://instagram.com/p/b7dRvqnUxT/embed/',
+	}
+
+	// honor the initial key
+	var initialKey	= location.hash.substr(1) || 'default'
+	switcher(urls[initialKey])
+	location.hash	= initialKey
+
+	// create buttons for all the keys
+	Object.keys(urls).forEach(function(key){
+		var url	= urls[key]
+		// create button
+		var buttonEl	= document.createElement('button')
+		buttonEl.innerHTML	= key
+		buttonEl.addEventListener('click', function(){
+			switcher(url)
+			// update location hash
+			location.hash	= key
+		})
+		// add the button to the DOM
+		document.querySelector('#selectButtons').appendChild(buttonEl)
+	})
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		handle resize							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	window.addEventListener('resize', function(){
+		// notify the renderer of the size change
+		renderer.setSize( window.innerWidth, window.innerHeight )
+		// update the camera
+		camera.aspect	= window.innerWidth / window.innerHeight
+		camera.updateProjectionMatrix()		
+	}, false)
+
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		Camera Controls							//
+	//////////////////////////////////////////////////////////////////////////////////
+	// var mouse	= {x : 0, y : 0}
+	// document.addEventListener('mousemove', function(event){
+	// 	mouse.x	= (event.clientX / window.innerWidth ) - 0.5
+	// 	mouse.y	= (event.clientY / window.innerHeight) - 0.5
+	// }, false)
+	// onRenderFcts.push(function(delta, now){
+	// 	camera.position.x += (mouse.x*10 - camera.position.x) * (delta*3)
+	// 	camera.position.y += (mouse.y*5  - camera.position.y) * (delta*3)
+	// 	camera.lookAt( scene.position )
+	// })
+
+	var controls	= new THREE.OrbitControls(camera, renderer.domElement)
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	//		handle resize							//
+	//////////////////////////////////////////////////////////////////////////////////
+
+	function onResize(){
+		// notify the renderer of the size change
+		renderer.setSize( window.innerWidth, window.innerHeight )
+		// update the camera
+		camera.aspect	= window.innerWidth / window.innerHeight
+		camera.updateProjectionMatrix()		
+	}
+	
+	window.addEventListener('resize', onResize, false)
+	//////////////////////////////////////////////////////////////////////////////////
+	//		render the scene						//
+	//////////////////////////////////////////////////////////////////////////////////
+	onRenderFcts.push(function(delta, now){
+		mixerContext.update()
+	})
+	onRenderFcts.push(function(){
+		renderer.render( scene, camera );		
+	})
+	
+	//////////////////////////////////////////////////////////////////////////////////
+	//		loop runner							//
+	//////////////////////////////////////////////////////////////////////////////////
+	var lastTimeMsec= null
+	requestAnimationFrame(function animate(nowMsec){
+		// keep looping
+		requestAnimationFrame( animate );
+		// measure time
+		lastTimeMsec	= lastTimeMsec || nowMsec-1000/60
+		var deltaMsec	= Math.min(200, nowMsec - lastTimeMsec)
+		lastTimeMsec	= nowMsec
+		// call each update function
+		onRenderFcts.forEach(function(onRenderFct){
+			onRenderFct(deltaMsec/1000, nowMsec/1000)
+		})
+	})
+
+
+</script></body>

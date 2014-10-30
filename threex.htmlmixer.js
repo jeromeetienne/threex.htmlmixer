@@ -86,11 +86,10 @@ THREEx.HtmlMixer.Context	= function(rendererWebgl, scene, camera){
  */
 THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {	
 	opts		= opts	|| {}
-	opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 1024
+	opts.elementW	= opts.elementW	!== undefined	? opts.elementW	: 768
 	opts.planeW	= opts.planeW !== undefined	? opts.planeW	: 1
 	opts.planeH	= opts.planeH !== undefined	? opts.planeH	: 3/4
 	opts.object3d	= opts.object3d !== undefined	? opts.object3d	: null
-
 	this.domElement	= domElement
 
 	// update functions
@@ -197,11 +196,13 @@ THREEx.HtmlMixer.Plane = function(mixerContext, domElement, opts) {
 
 THREEx.HtmlMixer.createDomElementForUrl	= function(url){
 
+	// handle image
 	var isImage	= (/\.(gif|jpg|jpeg|tiff|png)$/i).test(url)
 	if( isImage === true ){
 		return THREEx.HtmlMixer.createImageDomElement(url)	
 	}
 
+	// if this point is reached, default to iframe
 	var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
 	return domElement
 }
@@ -229,7 +230,7 @@ THREEx.HtmlMixer.createIframeDomElement	= function(url){
 		var container	= document.createElement('div')
 		container.appendChild(domElement)
 		container.style.overflow	= 'scroll'
-		// container.style.webkitOverflowScrolling	= 'touch'
+		container.style.webkitOverflowScrolling	= 'touch'
 		return container
 	}
 	//////////////////////////////////////////////////////////////////////////////////

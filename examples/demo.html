@@ -19,7 +19,9 @@
 	<button onclick='switchValue(this.textContent);'>youtube</button><br/>
 	 <!-- (may be flash depending on <a href='http://youtube.com/html5'>options</a>)<br/> -->
 	<button onclick='switchValue(this.textContent);'>video</button><br/>
-	<button onclick='switchValue(this.textContent);'>pdf</button><br/>
+	<button onclick='switchValue(this.textContent);'>pdfIframe</button><br/>
+	<button onclick='switchValue(this.textContent);'>pdfObject</button><br/>
+	<button onclick='switchValue(this.textContent);'>pdf.js</button><br/>
 	<button onclick='switchValue(this.textContent);'>jwplayer</button><br/>
 	<button onclick='switchValue(this.textContent);'>imgur-raw</button><br/>
 	<button onclick='switchValue(this.textContent);'>testTexture</button><br/>
@@ -112,17 +114,15 @@
 	var url		= 'images/UV_Grid_Sm.jpg';
 	var domElement	= THREEx.HtmlMixer.createImageDomElement(url)
 
-	// var domElement	= THREEx.HtmlMixer.createDomElementForUrl(url)
-
 	console.log('domElement', domElement)
 
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 	scene.add( mixerPlane.object3d )
 
-	// onRenderFcts.push(function(){
-	// 	var object3d	= mixerPlane.object3d
-	// 	object3d.rotation.y	+= 0.01
-	// })
+	onRenderFcts.push(function(){
+		var object3d	= mixerPlane.object3d
+		object3d.rotation.y	+= 0.01
+	})
 
 	//////////////////////////////////////////////////////////////////////////////////
 	//		Comment								//
@@ -157,11 +157,23 @@
 			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
 			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
 			scene.add(mixerPlane.object3d)
-		}else if( value === 'pdf' ){
-			var url		= 'https://bitcoin.org/bitcoin.pdf';
+		}else if( value === 'pdfIframe' ){
+			var url		= '/examples/documents/bitcoin.pdf';
 			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
 			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
-			scene.add(mixerPlane.object3d)			
+			scene.add(mixerPlane.object3d)		
+		}else if( value === 'pdfObject' ){
+			var url		= '/examples/documents/bitcoin.pdf';
+			url		= 'viewers/pdfobject-viewer/?url='+encodeURIComponent(url)
+			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
+			scene.add(mixerPlane.object3d)	
+		}else if( value === 'pdf.js' ){
+			var url		= '/examples/documents/bitcoin.pdf';
+			url		= 'viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(url)
+			var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+			mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
+			scene.add(mixerPlane.object3d)	
 		}else if( value === 'video' ){
 			var url	= 'videos/sintel.ogv'
 
@@ -195,7 +207,7 @@
 					planeW		: 1,
 					planeH		: boundingRect.height/boundingRect.width,
 				})
-				scene.add(mixerPlane.object3d)								
+				scene.add(mixerPlane.object3d)
 			})
 		}else if( value === 'imgur-raw' ){
 			var url		= 'http://i.imgur.com/RJQc7Qy.gif';

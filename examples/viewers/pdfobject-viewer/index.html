@@ -1,0 +1,32 @@
+<html>
+<head>
+	<title>PDFObject example</title>
+	<script type="text/javascript" src="vendor/pdfObject/pdfobject.js"></script>
+</head>
+<body>
+	<p>It appears you don't have Adobe Reader or PDF support in this web
+		browser. <a href="/pdf/sample.pdf">Click here to download the PDF</a>
+	</p>
+	<script type="text/javascript">
+		window.onload = function(){
+			// get parameters from the url query
+			function parseUrlQuery() {
+				var query	= location.search.substr(1);
+				var result	= {};
+				query.split("&").forEach(function(part) {
+					var item	= part.split("=");
+					result[item[0]] = decodeURIComponent(item[1]);
+				});
+				return result;
+			}
+			var urlQuery	= parseUrlQuery()
+			var documentUrl = urlQuery['url']
+
+			documentUrl	= documentUrl || '../../documents/bitcoin.pdf';
+			var myPDF	= new PDFObject({
+				url	: documentUrl
+			}).embed();
+		};
+	</script>
+</body>
+</html>
