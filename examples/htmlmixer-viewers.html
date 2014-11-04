@@ -106,20 +106,8 @@
 
 	function switcher(url){
 		var newUrl	= THREEx.HtmlMixer.convertToViewerUrl(url)
-		console.log('dddd', newUrl, url)
-// alert(newUrl)
-		// for non IOS
-		// mixerPlane.domElement.src	= newUrl
-// mixerPlane.setIframeSrc(newUrl)
 
-// TODO 
-// - make a threex.htmlmixerhelper.js
-// - add the domEvent creations in there
-// - add the multiplemixer in there too
-
-THREEx.HtmlMixerHelpers.setIframeSrc(mixerPlane, newUrl)
-		// for IOS
-		// mixerPlane.domElement.firstChild.src	= newUrl
+		THREEx.HtmlMixerHelpers.setIframeSrc(mixerPlane, newUrl)
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////
