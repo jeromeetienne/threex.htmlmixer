@@ -1,7 +1,7 @@
 <!doctype html>
 <script src="http://jwpsrv.com/library/Dr2UtkbpEeSbHiIAC0WXxA.js"></script>
 <body style='margin: 0px;'><script>
-window.addEventListener('load', function(event){
+
 	// get parameters from the url query
 	function parseUrlQuery() {
 		var query	= location.search.substr(1);
@@ -12,17 +12,13 @@ window.addEventListener('load', function(event){
 		});
 		return result;
 	}
-	var urlQuery	= parseUrlQuery()
-	var url 	= urlQuery['url']
-	url		= url	|| "http://www.youtube.com/watch?v=8CjdLYBDUqw"
+	var query	= parseUrlQuery()
+	if(!query.url )	alert('an url is required!')
+	var url		= query.url
 
-	var domElement	= document.createElement('div')
-	domElement.id	= 'myJwPlayerElement'
-	document.body.appendChild(domElement)
-	jwplayer(domElement).setup({
-		file	: url,
-		width	: window.innerWidth,
-		height	: window.innerHeight,
-	})	
-})
+	var image	= document.createElement('img')
+	image.src	= url
+	image.style.width	= '100%'
+	image.style.height	= '100%'
+	document.body.appendChild(image)
 </script></body>

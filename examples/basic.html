@@ -60,11 +60,9 @@
 
 	// create the iframe element
 	var url		= 'http://threejs.org/';
-	var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
-
-	// var documentUrl	= '../../documents/bitcoin.pdf'
-	// var url		= 'viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(documentUrl)
-	// var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+	var domElement	= document.createElement('iframe')
+	domElement.src	= url
+	domElement.style.border	= 'none'
 
 	// create the plane
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)

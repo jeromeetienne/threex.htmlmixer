@@ -2,6 +2,8 @@ var THREEx	= THREEx		|| {}
 THREEx.HtmlMixer= THREEx.HtmlMixer	|| {}
 
 THREEx.HtmlMixer.convertToViewerUrl	= function(url){
+	var baseUrl	= THREEx.HtmlMixer.convertToViewerUrl.baseUrl
+
 	//////////////////////////////////////////////////////////////////////////////////
 	//		youtube/watch by embeded player
 	//////////////////////////////////////////////////////////////////////////////////
@@ -19,20 +21,39 @@ THREEx.HtmlMixer.convertToViewerUrl	= function(url){
 	//////////////////////////////////////////////////////////////////////////////////
 	var isYoutubeWatch	= /^https?:\/\/www.youtube.com\/watch/.test(url)
 	if( isYoutubeWatch === true ){
-		url	= 'htmlmixer-viewers/jwplayer-viewer/index.html?url='+encodeURIComponent(url)
+		url	= baseUrl+'/htmlmixer-viewers/jwplayer-viewer/index.html?url='+encodeURIComponent(url)
 		return url
 	}
 
+	//////////////////////////////////////////////////////////////////////////////////
+	//		raw video thru jwplayer-viewer
+	//////////////////////////////////////////////////////////////////////////////////
+	var isRawVideo		= /\.(ogv|mp4|m4v)$/i.test(url)
+	if( isRawVideo === true ){
+		url	= baseUrl+'/htmlmixer-viewers/jwplayer-viewer/index.html?url='+encodeURIComponent(url)
+		return url
+	}
+
+	//////////////////////////////////////////////////////////////////////////////////
+	//		raw video thru jwplayer-viewer
+	//////////////////////////////////////////////////////////////////////////////////
+	var isRawImage		= /\.(jpg|gif|png)$/i.test(url)
+	if( isRawImage === true ){
+		url	= baseUrl+'/htmlmixer-viewers/image-viewer/index.html?url='+encodeURIComponent(url)
+		return url
+	}
 	//////////////////////////////////////////////////////////////////////////////////
 	//		for pdf, use pdf.js
 	//////////////////////////////////////////////////////////////////////////////////
 	var isPdf	= /\.pdf$/.test(url)
 	if( isPdf === true ){
-		// url	= 'htmlmixer-viewers/pdfjs-simpleviewer/?url='+encodeURIComponent(url)
-		url	= 'htmlmixer-viewers/pdfjs-viewer/web/viewer.html?file='+encodeURIComponent(url)
+		url	= baseUrl+'/htmlmixer-viewers/pdfjs-viewer/web/viewer.html?file='+encodeURIComponent(url)
 		return url
 	}
 
 	// if this point is reached, do nothing
 	return url
 }
+
+
+THREEx.HtmlMixer.convertToViewerUrl.baseUrl	= '.'

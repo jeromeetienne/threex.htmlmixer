@@ -50,8 +50,8 @@ THREEx.HtmlMultipleMixer.Plane = function(multipleMixerContext, domElement, opts
 
 	// update all context
 	this.update	= function(){
-		contexts.forEach(function(context){
-			context.update();
+		planes.forEach(function(plane){
+			plane.update();
 		})
 	}
 }

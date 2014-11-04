@@ -2,10 +2,12 @@
 <!-- for ios and maybe other mobiles -->
 <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 
-<script src='vendor/three.js/build/three.js'></script>
+<script src='vendor/three.js/build/three.min.js'></script>
+<script src='vendor/three.js/examples/js/libs/stats.min.js'></script>
 <script src='vendor/three.js/examples/js/renderers/CSS3DRenderer.js'></script>
 <script src='vendor/three.js/examples/js/controls/OrbitControls.js'></script>
 <script src='../threex.htmlmixer.js'></script>
+<script src='../threex.htmlmixerhelpers.js'></script>
 <script src='htmlmixer-viewers/threex.htmlmixerviewers.js'></script>
 
 <!-- for jwplayer only  -->
@@ -90,8 +92,8 @@
 	//		create a Plane for THREEx.HtmlMixer				//
 	//////////////////////////////////////////////////////////////////////////////////
 	
-	var url		= 'http://threejs.org';
-	var domElement	= THREEx.HtmlMixer.createIframeDomElement(url)
+	var url		= 'about:blank';
+	var domElement	= THREEx.HtmlMixerHelpers.createIframeDomElement(url)
 	console.log('domElement', domElement)
 
 	var mixerPlane	= new THREEx.HtmlMixer.Plane(mixerContext, domElement)
@@ -105,8 +107,19 @@
 	function switcher(url){
 		var newUrl	= THREEx.HtmlMixer.convertToViewerUrl(url)
 		console.log('dddd', newUrl, url)
+// alert(newUrl)
+		// for non IOS
+		// mixerPlane.domElement.src	= newUrl
+// mixerPlane.setIframeSrc(newUrl)
 
-		mixerPlane.domElement.src	= newUrl
+// TODO 
+// - make a threex.htmlmixerhelper.js
+// - add the domEvent creations in there
+// - add the multiplemixer in there too
+
+THREEx.HtmlMixerHelpers.setIframeSrc(mixerPlane, newUrl)
+		// for IOS
+		// mixerPlane.domElement.firstChild.src	= newUrl
 	}
 
 	//////////////////////////////////////////////////////////////////////////////////
@@ -114,21 +127,14 @@
 	//////////////////////////////////////////////////////////////////////////////////
 
 	var urls	= {
-		'default'		: 'http://learningthreejs.com',
-		'threex'		: 'http://jeromeetienne.github.io/threex/',
-		'three.js'		: 'http://threejs.org/',
+		'default'		: 'https://www.youtube.com/watch?v=0xiC9GNNODE',
 		'vimeo'			: 'http://player.vimeo.com/video/14641555?portrait=0&color=333',
-		'youtubeRaw'		: 'http://www.youtube.com/embed/Y4fIPY31sDo?webm=1&html5=1',
-		'youtubeRawIphone'	: 'http://www.youtube.com/embed/e2w8z6mI47U?playsinline=1&rel=0&showinfo=0',
 		'youtubeWatch'		: 'https://www.youtube.com/watch?v=0xiC9GNNODE',
-		// 'pdf'			: 'https://bitcoin.org/bitcoin.pdf',
 		'pdf'			: '/examples/documents/bitcoin.pdf',
 		'videoOgv'		: '/examples/videos/sintel.ogv',
 		'videoMp4'		: '/examples/videos/sintel.mp4',
-		'youtubeByJwplayer'	: 'http://www.youtube.com/watch?v=8CjdLYBDUqw',
 		'imgur-raw'		: 'http://i.imgur.com/RJQc7Qy.gif',
 		'testTexture'		: '/examples/images/UV_Grid_Sm.jpg',
-		'github-badge'		: 'http://githubbadge.appspot.com/badge/jeromeetienne',
 		'dailymotion'		: 'http://www.dailymotion.com/embed/video/x12pd0r_betisier-ce-qui-se-passe-entre-les-prises_fun?html=1',
 		'ted'			: 'http://embed.ted.com/talks/derek_paravicini_and_adam_ockelford_in_the_key_of_genius.html',
 		'blip'			: 'http://blip.tv/play/AYOT%2BBUC.x?p=1',
@@ -200,9 +206,21 @@
 	//////////////////////////////////////////////////////////////////////////////////
 	//		render the scene						//
 	//////////////////////////////////////////////////////////////////////////////////
+	// init Stats
+	var stats	= new Stats();
+	document.body.appendChild( stats.domElement );
+	stats.domElement.style.position = 'absolute';
+	stats.domElement.style.left	= '0px';
+	stats.domElement.style.bottom	= '0px';
+	onRenderFcts.push(function(){
+		stats.update()
+	})
+
+	// update mixerContext
 	onRenderFcts.push(function(delta, now){
 		mixerContext.update()
 	})
+	// update webgl renderer
 	onRenderFcts.push(function(){
 		renderer.render( scene, camera );		
 	})
